@@ -1,8 +1,25 @@
 import './App.css';
 import {BrowserRouter,Routes,Route,}from 'react-router-dom'
-import Login from './pages/login'
-import Register from './pages/signUp';
-import Home from './pages/home'
+import Login from './pages/user/login'
+import Register from './pages/user/signUp';
+import Home from './pages/user/home'
+import SignUp from './pages/owner/signup'
+import OwnerLogin from './pages/owner/login'
+import OwnerHome from './pages/owner/restaurant'
+import AddRestaurant from './pages/owner/add-restaurant';
+import OwnerList from './pages/adimin/owner-list';
+import UserList from './pages/adimin/user-list'
+// import AdminSignUp from './pages/adimin/signup';
+import AdminLogin from './pages/adimin/login';
+import ViewDish from './pages/owner/view-dishes'
+import AddDish from './components/owner/add-dishes'
+import Otp from './components/user/otp';
+import Verify from './components/user/varify-otp'
+import EditDish from './components/owner/edit-dish';
+import EditRestaurant from './components/owner/edit-restaurant';
+import OwnerDetailPage from './pages/owner/owner-detail-page';
+
+import LishDishPage from './pages/user/list-dish-page';
 
 function App() {
   return (
@@ -12,6 +29,22 @@ function App() {
     <Route path='/' element={<Home/>}/>
      <Route path='/login' element={<Login/>}/>
      <Route path='/register' element={<Register/>}/>
+     <Route path='/sign-up' element={<SignUp/>}/>
+     <Route path='/owner-login' element={<OwnerLogin/>}/>
+     <Route path='/owner-home' element={<OwnerHome/>}/>
+     <Route path='/add-restaurant' element={<AddRestaurant/>}/>
+     <Route path='/admin/owner-list' element={<OwnerList/>}/>
+     <Route path='/admin/login' element={<AdminLogin/>}/>
+     <Route path='/admin/user-list' element={<UserList/>}/>
+     <Route path='/owner/view-dish' element={<ViewDish/>}/>
+     <Route path='/owner/add-dish' element={<AddDish/>}/>
+     <Route path='/user/otp' element={<Otp/>}/>
+     <Route path='/user/verify' element={<Verify/>}/>
+     <Route path='/owner/edit-dish/:id' element={<EditDish/>}/>
+     <Route path='/owner/edit-restaurant/:id' element={<EditRestaurant/>}/>
+     <Route path='/owner/more-details' element={<OwnerDetailPage/>}/>
+     <Route path='/user/dish-listing/:id' element={<LishDishPage/>}/>
+      
 
     </Routes>
     </BrowserRouter>

@@ -13,6 +13,10 @@ const userSchema=mongoose.Schema({
         unique: true,
         trim: true,
       },
+phone:{
+          type:Number,
+          
+      },
       userinfo: {
         type: String,
         trim: true,

@@ -1,6 +1,7 @@
 
 import {getApp,getApps,initializeApp}from 'firebase/app'
-
+import {getAuth} from 'firebase/auth'
+import 'firebase/storage'
 const firebaseConfig = {
     apiKey: "AIzaSyANvQVQYTXR-zp1DUWdyb6emVnJwu-zFtQ",
     authDomain: "fir-new-63685.firebaseapp.com",
@@ -12,5 +13,6 @@ const firebaseConfig = {
   };
 
   const  app=getApps.length>0?getApp():initializeApp(firebaseConfig)
-
+    const auth =getAuth(app)
+    export {auth}
   export {app}

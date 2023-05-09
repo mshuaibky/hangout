@@ -7,12 +7,18 @@ const mongoose=require('mongoose')
 const cookieParser=require('cookie-parser')
 
 const userRoutes=require('./routes/user')
+const ownerRoutes=require('./routes/owner')
+const adminRoutes=require('./routes/admin')
 app.use(cors({
-    origin:["http://localhost:3000"],credentials:true,origin:true
+
+    credentials:true,
+    methods:["GET","POST"],
+    origin:true,
+    origin:["http://localhost:3000"],
 }))
 app.use(morgan('combined'))
 app.use(cookieParser())
-app.use(express.json())
+app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true}));
 
 //DB connection
@@ -23,9 +29,11 @@ mongoose.connect(process.env.DATABASE).then(()=>{
 })
 
 app.use('/',userRoutes)
+app.use('/owner',ownerRoutes)
+app.use('/admin',adminRoutes)
 
 //port
-const port =process.env.PORT
+const port =process.env.PORT;
 
 //starting app
 app.listen(port,()=>{

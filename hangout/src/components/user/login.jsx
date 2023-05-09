@@ -1,83 +1,108 @@
-import React,{useEffect} from 'react'
-import {Link, useNavigate} from 'react-router-dom'
-import LoginImage from '../../assets/log.jpg'
+import React,{useState} from 'react'
+import {Link,useNavigate} from 'react-router-dom'
 import {useFormik} from 'formik'
-import toast,{Toaster} from 'react-hot-toast'
-import {registerUser,googleLogin} from '../../helpers/userHelpers'
+import toast, {Toaster} from 'react-hot-toast'
+import LoginImage from '../../assets/log.jpg'
+import {loginGoogle, loginUser} from '../../helpers/userHelpers'
 import {getAuth,GoogleAuthProvider,onAuthStateChanged,signInWithPopup}  from 'firebase/auth'
 import {app} from '../../config/config'
+import { userLogin } from '../../slices/user-slice'
+import { useDispatch, useSelector, } from 'react-redux'
 
-const validate=()=>{
 
+
+
+const validate=values=>{
+  const errors = {};
+
+  
+
+  //email
+   if(!values.email){
+      errors.email = toast.error("email is required")
+  }else if(!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)){
+      errors.email = toast.error("invalid email address")
+  }
+
+
+  //password
+  else if(!values.password){
+    errors.password = toast.error('password is required');
+  }else if(values.password.length < 6){
+    errors.password = toast.error("password should contain atleast Six characters")
+  }else if(values.password.includes(' ')){
+    errors.password = toast.error('password is required');
+  }
+
+  
+  return errors
 }
 
-function Register() {
-  const navigate=useNavigate()
-   const formik =useFormik({
-   initialValues:{
-    name:'',
-    email:'',
-    password:''
-   },
-   validate,
-   validateOnBlur:false,
-   validateOnChange:false,
-   onSubmit:async values=>{
-    console.log(values,'namma values');
-    let register=registerUser(values)
-    toast.promise(register,{
-      loading : 'creating...',
-      success : <b>sign up successfully</b>,
-      error : <b>Can't sign up user</b>
+function Login() {
+  const  userId=useSelector((state)=>{
+
+      return state
+  })  
+  console.log(userId.user.user.user,'////');
+  const dispatch=useDispatch()
+
+  
+    const navigate=useNavigate()
+  const formik=useFormik({
+    initialValues:{
+      email:'',
+      password:''
+    },
+    validate,
+    validateOnBlur:false,
+    validateOnChange:false,
+    onSubmit:async values=>{
+      let login=loginUser(values)
+      toast.promise(login,{
+        loading:'login in...',
+        success:<b>login successfull</b>,
+        error:<b>login failed</b>
+
+      })
+      login.then((data)=>{
+        console.log(data,'userData');
+        if(data){
+          const {_id}=data.data.user
+          console.log(_id,'userId');
+          dispatch(userLogin({user:_id}))
+           navigate('/')
+        }
+      }).catch((error)=>{
+       console.log(error.response.data.msg,'errrors');
+        toast.error(error.response.data.msg)
+      })
+    }
   })
-register.then((data)=>{
-  console.log(data,'then data');
-  if(data){
-   navigate('/login')
-  }
-}).catch(error=>{
-  console.log(error.message);
-})
-
-   }
-   
-   })
-
-   //google signUp
-
+  //login with google
   const firebaseAuth=getAuth(app)
   const provider=new GoogleAuthProvider()
 
   const loginWithGoogle=async()=>{
     const response=await signInWithPopup(firebaseAuth,provider)
-    console.log(response,'google response');
-    googleLogin(response).then((data)=>{
+    loginGoogle(response).then((data)=>{
       if(data){
+      
         navigate('/')
       }
-      
     }).catch((error)=>{
-      console.log(error.message);
-      
+     
+      toast.error(error.data.msg)
     })
   }
-  // useEffect(()=>{
-  //   firebaseAuth.onAuthStateChanged((userCred)=>{
-  //     if(userCred){
-  //       userCred.getIdToken().then((token)=>{
-  //         console.log(token,'namma token');
-  //         googleLogin(token)
-  //       })
-  //     }
-  //   })
-  // })
-
   return (
-   <div>
-         
-         <section>
+    <div>
+       <section>
+     
       <div className="grid grid-cols-1 lg:grid-cols-2">
+    
       <Toaster position='top-center' reverseOrder={false}></Toaster>
+    
+  
         <div className="relative flex items-end px-4 pb-10 pt-60 sm:pb-16 md:justify-center lg:pb-24 sm:px-6 lg:px-8">
           <div className="absolute inset-0">
             <img
@@ -133,6 +158,7 @@ register.then((data)=>{
                     {" "}
                     Unlimited Exports{" "}
                   </span>
+                  
                 </li>
                 <li className="flex items-center space-x-3">
                   <div className="inline-flex items-center justify-center flex-shrink-0 w-5 h-5 bg-blue-500 rounded-full">
@@ -180,46 +206,27 @@ register.then((data)=>{
         </div>
         <div className="flex items-center justify-center px-4 py-10 sm:px-6 lg:px-8 sm:py-16 lg:py-24">
           <div className="xl:w-full xl:max-w-sm 2xl:max-w-md xl:mx-auto">
+          <div >
+      
+        </div>
             <h2 className="text-3xl font-bold leading-tight text-black dark:text-white sm:text-4xl">
-              Sign Up
+              Login
             </h2>
             <p className="mt-2 text-base text-gray-600 dark:text-gray-300">
-              Already have an account?{" "}
+              Dont have an account?{" "}
               <a
-                
+                href="#"
                 title=""
                 className="font-medium text-indigo-600 transition-all duration-200 hover:text-indigo-700 hover:underline focus:text-indigo-700"
-                
               >
-                
-               <Link to='/login'>Sign In</Link>
+              <Link to={'/register'}>Register</Link>
               </a>
             </p>
+            <br></br>
 
             <form onSubmit={formik.handleSubmit} className="mt-8">
               <div className="space-y-5">
-                <div>
-                  <label
-                    htmlFor="name"
-                    className="text-base font-medium text-gray-900 dark:text-gray-200"
-                  >
-                    {" "}
-                    Full Name{" "}
-                  </label>
-                  <div className="mt-2.5">
-                    <input
-                      name='name'
-                      onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.name}
-
-                      className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent py-2 px-3 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:text-gray-50 dark:focus:ring-gray-400 dark:focus:ring-offset-gray-900"
-                      type="text"
-                      placeholder="Enter You Full Name"
-                      id="name"
-                    ></input>
-                  </div>
-                </div>
+                
 
                 <div>
                   <label
@@ -234,7 +241,7 @@ register.then((data)=>{
                       name='email'
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      value={formik.values.email}
+                      value={formik.email}
                       className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent py-2 px-3 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:text-gray-50 dark:focus:ring-gray-400 dark:focus:ring-offset-gray-900"
                       type="email"
                       placeholder="Enter Your Email"
@@ -253,10 +260,10 @@ register.then((data)=>{
                   </label>
                   <div className="mt-2.5">
                     <input
-                    name='password'
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.password}
+                       name='password'
+                       onChange={formik.handleChange}
+                       onBlur={formik.handleBlur}
+                       value={formik.password}
                       className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent py-2 px-3 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:text-gray-50 dark:focus:ring-gray-400 dark:focus:ring-offset-gray-900"
                       type="password"
                       placeholder="Enter Your Password"
@@ -264,7 +271,7 @@ register.then((data)=>{
                     ></input>
                   </div>
                 </div>
-
+                <br></br>
                 <div>
                   <button type='submit' className="w-full inline-flex items-center justify-center rounded-md bg-indigo-600 px-3.5 py-2.5 text-base font-semibold leading-7 text-white hover:bg-indigo-500">
                     Get started
@@ -286,9 +293,11 @@ register.then((data)=>{
                 </div>
               </div>
             </form>
+            <br></br>
 
             <div className="mt-3 space-y-3">
               <button
+              onClick={loginWithGoogle}
                 type="button"
                 className="relative inline-flex items-center justify-center w-full px-4 py-4 text-base font-semibold text-gray-700 dark:text-gray-400 transition-all duration-200 bg-white border border-gray-500 rounded-md hover:bg-gray-100 focus:bg-gray-100 hover:text-black focus:text-black focus:outline-none"
               >
@@ -302,17 +311,42 @@ register.then((data)=>{
                     <path d="M20.283 10.356h-8.327v3.451h4.792c-.446 2.193-2.313 3.453-4.792 3.453a5.27 5.27 0 0 1-5.279-5.28 5.27 5.27 0 0 1 5.279-5.279c1.259 0 2.397.447 3.29 1.178l2.6-2.599c-1.584-1.381-3.615-2.233-5.89-2.233a8.908 8.908 0 0 0-8.934 8.934 8.907 8.907 0 0 0 8.934 8.934c4.467 0 8.529-3.249 8.529-8.934 0-.528-.081-1.097-.202-1.625z"></path>
                   </svg>
                 </div>
-               <button  onClick={loginWithGoogle}> SignUp with google</button>
+                login  with Google
               </button>
-         
+
+             
             
             </div>
+            <div className="mt-3 space-y-3">
+              <Link to={'/user/otp'}>
+              <button
+              
+                type="button"
+                className="relative inline-flex items-center justify-center w-full px-4 py-4 text-base font-semibold text-gray-700 dark:text-gray-400 transition-all duration-200 bg-white border border-gray-500 rounded-md hover:bg-gray-100 focus:bg-gray-100 hover:text-black focus:text-black focus:outline-none"
+              >
+                <div className="absolute inset-y-0 left-0 p-4">
+                  <svg
+                    className="w-6 h-6 text-rose-500"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path fill="currentColor" d="M17,2H7A2,2,0,0,0,5,4v16a2,2,0,0,0,2,2h10a2,2,0,0,0,2-2V4A2,2,0,0,0,17,2Zm-6,16a1,1,0,1,1,1-1A1,1,0,0,1,11,18Zm4-4a1,1,0,1,1,1-1A1,1,0,0,1,15,14Zm0-4a1,1,0,1,1,1-1A1,1,0,0,1,15,10Z"/>
+                  </svg>
+                </div>
+                Login With Otp
+              </button>
+              </Link>
+             
+            
+            </div>
+          
           </div>
         </div>
       </div>
     </section>
-   </div>
+    </div>
   )
 }
 
-export default Register
+export default Login
