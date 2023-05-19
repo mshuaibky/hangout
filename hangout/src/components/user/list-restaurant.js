@@ -5,6 +5,9 @@ import { Link } from 'react-router-dom'
 
 function ListRestaurant() {
     const [data,setData]=useState([])
+    useEffect(()=>{
+        sessionStorage.clear();
+    },[])
    
   useEffect(()=>{
     getAllRestaurnts().then((result)=>{
@@ -22,16 +25,10 @@ function ListRestaurant() {
 
                 <div className="max-w-sm bg-white px-6 pt-6 pb-2 rounded-xl shadow-lg transform hover:scale-105 transition duration-500">
                     <div className="relative">
-                        {
-                           items.resImages.map((image)=>{
-
-                        return ( 
-                        <img className="w-full h-64 rounded-xl" src={image.secure_url} alt="Colors" />
-                        )
-                    })
-
-                           
-                        }
+                   
+                       
+                        <img className="w-full h-64 rounded-xl" src={items.resImages[0].secure_url} alt="Colors" />
+                    
                     </div>
                     <h3 className="m-2 text-xl font-bold text-indigo-600">{items.resName} </h3>
                     <h5 className="m-2 text-gray-800 text-lg font-bold cursor-pointer">{items.resAddress}</h5>

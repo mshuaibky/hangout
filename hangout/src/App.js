@@ -20,31 +20,46 @@ import EditRestaurant from './components/owner/edit-restaurant';
 import OwnerDetailPage from './pages/owner/owner-detail-page';
 
 import LishDishPage from './pages/user/list-dish-page';
+import AddTablePage from './pages/owner/add-table-page';
+import TableForm from './components/owner/table-form';
+import CheckoutPage from './pages/user/checkout-page';
 
 function App() {
   return (
    <div>
     <BrowserRouter>
     <Routes>
+
+      {/* User Route */}
+
     <Route path='/' element={<Home/>}/>
      <Route path='/login' element={<Login/>}/>
      <Route path='/register' element={<Register/>}/>
+     <Route path='/user/verify' element={<Verify/>}/>
+     <Route path='/user/otp' element={<Otp/>}/>
+     <Route path='/user/dish-listing/:id' element={<LishDishPage/>}/>
+     <Route path='/user/checkout' element={<CheckoutPage/>}/>
+      
+     {/* Owner route */}
+
      <Route path='/sign-up' element={<SignUp/>}/>
      <Route path='/owner-login' element={<OwnerLogin/>}/>
      <Route path='/owner-home' element={<OwnerHome/>}/>
      <Route path='/add-restaurant' element={<AddRestaurant/>}/>
-     <Route path='/admin/owner-list' element={<OwnerList/>}/>
-     <Route path='/admin/login' element={<AdminLogin/>}/>
-     <Route path='/admin/user-list' element={<UserList/>}/>
      <Route path='/owner/view-dish' element={<ViewDish/>}/>
      <Route path='/owner/add-dish' element={<AddDish/>}/>
-     <Route path='/user/otp' element={<Otp/>}/>
-     <Route path='/user/verify' element={<Verify/>}/>
      <Route path='/owner/edit-dish/:id' element={<EditDish/>}/>
      <Route path='/owner/edit-restaurant/:id' element={<EditRestaurant/>}/>
      <Route path='/owner/more-details' element={<OwnerDetailPage/>}/>
-     <Route path='/user/dish-listing/:id' element={<LishDishPage/>}/>
+     <Route path='/owner/add-table' element={<AddTablePage/>}/>
+     <Route path='/owner/table-form' element={<TableForm/>}/>
+
+
+      {/* admin Routes */}
       
+     <Route path='/admin/owner-list' element={<OwnerList/>}/>
+     <Route path='/admin/login' element={<AdminLogin/>}/>
+     <Route path='/admin/user-list' element={<UserList/>}/>
 
     </Routes>
     </BrowserRouter>

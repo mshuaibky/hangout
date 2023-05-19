@@ -1,6 +1,7 @@
 const Admin=require('../model/admin/admin')
 const User=require('../model/user/user')
 const Owner=require('../model/owner/owner')
+const Details=require('../model/owner/details-restaurant')
 const bcrypt=require('bcrypt')
 const jwt=require('jsonwebtoken')
 const maxAge = 1 * 24 * 60 * 60

@@ -1,4 +1,5 @@
 const Owner=require('../model/owner/owner')
+const Table=require('../model/owner/table')
 const bcrypt = require('bcrypt');
 const cloudinary=require('../util/cloudinary')
 const Restaurants=require('../model/owner/restaurants')
@@ -93,10 +94,13 @@ exports.login=async(req,res)=>{
 //adding restaurant
 exports.resDetails=(async(req,res)=>{
     console.log(req.body,'req.body');
-    const {resName,resAddress,numberOfTables,phone,image,wifi,parking,Ac,ownerId}=req.body
+    const {resName,resAddress,numberOfTables,phone,image,wifi,parking,Ac,ownerId,imageTwo}=req.body
     
     try {
      const result=await cloudinary.uploader.upload(image,{
+        upload_preset:'restaurant',
+     })
+     const resultTwo=await cloudinary.uploader.upload(imageTwo,{
         upload_preset:'restaurant',
      })
      
@@ -110,7 +114,7 @@ exports.resDetails=(async(req,res)=>{
             parking,
             Ac,
             ownerId,
-            resImages:result
+            resImages:[result,resultTwo]
         });
         addRestaurant.save().then(()=>{
             console.log("data added");
@@ -280,13 +284,16 @@ exports.oneResDetails=async(req,res)=>{
 //edit res
 
 exports.editRes=async(req,res)=>{
+    console.log(req.body,'namma body');
     try {
         
-        console.log(req.body,'namma body');
-        const {resName,resAddress,numberOfTables,phone,id,image}=req.body
+        const {resName,resAddress,numberOfTables,phone,id,image,imageTwo}=req.body
         const result=await cloudinary.uploader.upload(image,{
           upload_preset:'restaurant',
         })
+        const resultTwo=await cloudinary.uploader.upload(imageTwo,{
+            upload_preset:'restaurant',
+          })
         console.log(result,'namma result in cloudinery');
         if(result){
           const newRes=await Restaurants.updateOne({_id:id},{
@@ -295,7 +302,7 @@ exports.editRes=async(req,res)=>{
                   resAddress:resAddress,
                   numberOfTables:numberOfTables,
                   phone:phone,
-                  resImages:result
+                  resImages:[result,resultTwo]
               }
           })
           console.log(newRes);
@@ -343,5 +350,41 @@ exports.properDetails=async(req,res)=>{
     } catch (error) {
         console.log(error.message);
         res.status(500).send({msg:error})
+    }
+}
+//adding Table
+exports.addTable=(req,res)=>{
+    console.log(req.body,'table');
+    try {
+        const {number,ownerId}=req.body
+      let table=new Table({
+        number,
+        ownerId,
+      })
+      table.save().then((response)=>{
+       if(response){
+        res.status(200).send({msg:'saved successfully'})
+       }else{
+        res.status(500).send({msg:'something went wrong'})
+       }
+      })
+    } catch (error) {
+        res.send(error)
+    }
+}
+//getting all table details
+exports.getAllTableDetails=async(req,res)=>{
+    try {
+        const {id}=req.params
+        console.log(id,'namm aid ');
+        let tableDetails=await Table.find({ownerId:new ObjectId(id)})
+        console.log(tableDetails,'ella tablem');
+        if(tableDetails){
+            res.status(200).send({data:tableDetails})
+        }else{
+            res.status(500).send({msg:'something went wrong'})
+        }
+    } catch (error) {
+        res.send(error)
     }
 }

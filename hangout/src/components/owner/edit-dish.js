@@ -1,11 +1,12 @@
 import React,{useEffect, useState} from 'react'
 import { useParams } from 'react-router-dom';
-import{useNavigate} from 'react-router-dom'
-
+import{useNavigate,Link} from 'react-router-dom'
+import {Home} from 'lucide-react'
 import toast, {Toaster} from 'react-hot-toast'
 
 import {useFormik} from 'formik'
 import {newDishDetails, oneDishDetails} from '../../helpers/ownerHelper'
+
 
 
 function Edit_Dish() {
@@ -83,8 +84,39 @@ function Edit_Dish() {
       })
   return (
     <div>
+      <nav className="m-3 flex  min-w-fit items-start rounded-md bg-gray-100 p-2" aria-label="Breadcrumb">
+      <ol className="inline-flex items-center space-x-1 md:space-x-3">
+        <li className="inline-flex items-center">
+          <Link to={'/owner-home'}
+            href="#"
+            className="ml-1 inline-flex text-sm font-medium text-gray-800 hover:underline md:ml-2"
+          >
+            <Home className="mr-4 h-4 w-4" />
+            Home
+          </Link>
+        </li>
+        <li>
+          <div className="flex items-center">
+            <span className="mx-2.5 text-gray-800 ">/</span>
+            <Link to={'/owner/view-dish'}
+             href="#" className="ml-1 text-sm font-medium text-gray-800 hover:underline md:ml-2">
+             Dishes
+            </Link>
+          </div>
+        </li>
+        <li aria-current="page">
+          <div className="flex items-center">
+            <span className="mx-2.5 text-gray-800 ">/</span>
+            <span className="ml-1 text-sm font-medium text-gray-800 hover:underline md:ml-2">
+             Edit Dishes
+            </span>
+          </div>
+        </li>
+      </ol>
+    </nav>
        <div>
-      <div className='p-10'>
+       <div  className='rounded-md shadow-md  bg-slate-200   border-gray-700  p-3 m-4'>
+
       
 
         <form onSubmit={formik.handleSubmit} className="mx-auto max-w-lg">

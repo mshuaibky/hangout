@@ -24,7 +24,7 @@ export async function OwnerLogin(credentials){
 }
 //adding res details
 export async function resDetails(credentials){
-    console.log(credentials,'credNew');
+    
     return new Promise((resolve,reject)=>{
         axios.post('http://localhost:4000/owner/res-details',credentials).then((data)=>{
             
@@ -143,6 +143,28 @@ export async function newResDetails(data){
 export async function properDetails(credentials){
     return new Promise((resolve,reject)=>{
         axios.post('http://localhost:4000/owner/owner-proper-details',credentials).then((data)=>{       
+           resolve(data)
+        }).catch((error)=>{
+            reject(error)
+        })
+    })
+}
+
+//adding tables
+export async function tableDetails(data){
+    console.log(data,'namma data');
+    return new Promise((resolve,reject)=>{
+        axios.post('http://localhost:4000/owner/owner-table-details',data).then((data)=>{       
+           resolve(data)
+        }).catch((error)=>{
+            reject(error)
+        })
+    })
+}
+//getting all table data
+export async function getTableData(id){
+    return new Promise((resolve,reject)=>{
+        axios.get(`http://localhost:4000/owner/get-table-details${id}`,).then((data)=>{       
            resolve(data)
         }).catch((error)=>{
             reject(error)

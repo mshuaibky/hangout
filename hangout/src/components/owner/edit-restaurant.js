@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { useParams,useNavigate } from 'react-router-dom'
+import { useParams,useNavigate,Link } from 'react-router-dom'
 import toast, {Toaster} from 'react-hot-toast'
 import {useFormik} from 'formik'
+import {Home} from 'lucide-react'
 import {oneResDetails,newResDetails} from '../../helpers/ownerHelper'
 
 
@@ -11,6 +12,7 @@ function EditRestaurant() {
   const [res,setRes]=useState([])
   console.log(res,'namma res only');
   const [image,setImage]=useState('')
+  const [imageTwo,setImageTwo]=useState('')
   const [resName,setResName]=useState('')
   const [resAddress,setResAddress]=useState('')
   const [numberOfTables,setTables]=useState('')
@@ -35,6 +37,7 @@ function EditRestaurant() {
   },[])
 
   const secureUrl = res?.resImages && res?.resImages?.length > 0 ? res?.resImages[0]?.secure_url : '';
+  const secureUrlTwo = res?.resImages && res?.resImages?.length > 0 ? res?.resImages[1]?.secure_url : '';
   console.log(secureUrl,'secureUrl');
   const handleImage=(e)=>{
     const file=e.target.files[0]
@@ -51,6 +54,24 @@ function EditRestaurant() {
       setImage("")
     }
   }
+  const handleResImageTwo=(e)=>{
+    const file=e.target.files[0]
+    if(!file){
+      toast.error('please upload image')
+    }
+    TransformFileTwo(file)
+  };
+  const TransformFileTwo=(file)=>{
+    const reader=new FileReader()
+    if(file){
+      reader.readAsDataURL(file);
+      reader.onloadend=()=>{
+        setImageTwo(reader.result)
+      }
+    }else{
+      setImageTwo("")
+    }
+  }
   const formik=useFormik({
     initialValues:{
         resName:'',
@@ -62,7 +83,7 @@ function EditRestaurant() {
     validateOnChange:false,
     onSubmit:()=>{
       let img={image:image}
-
+      let imgTwo={imageTwo:imageTwo}
       const credentials={
         resName,
         resAddress,
@@ -71,10 +92,10 @@ function EditRestaurant() {
         id
       }
       console.log(credentials);
-      const imgCopy=Object.assign({},credentials,img)
+      const imgCopy=Object.assign({},credentials,img,imgTwo)
       let newDetails=newResDetails(imgCopy)
       toast.promise(newDetails,{
-        loading:'updating...',
+        loading:'loading...',
         success:<b>edited successfully</b>,
         error:<b>failed to edit</b>
       })
@@ -87,7 +108,38 @@ function EditRestaurant() {
   })
   return (
     <div>
-      <div className='p-10'>
+       <nav className="m-3 flex  min-w-fit items-start rounded-md bg-gray-100 p-2" aria-label="Breadcrumb">
+      <ol className="inline-flex items-center space-x-1 md:space-x-3">
+        <li className="inline-flex items-center">
+          <Link to={'/owner-home'}
+            href="#"
+            className="ml-1 inline-flex text-sm font-medium text-gray-800 hover:underline md:ml-2"
+          >
+            <Home className="mr-4 h-4 w-4" />
+            Home
+          </Link>
+        </li>
+        <li>
+          <div className="flex items-center">
+            <span className="mx-2.5 text-gray-800 ">/</span>
+            <Link to={'/owner-home'}
+             href="#" className="ml-1 text-sm font-medium text-gray-800 hover:underline md:ml-2">
+             Restuarants
+            </Link>
+          </div>
+        </li>
+        <li aria-current="page">
+          <div className="flex items-center">
+            <span className="mx-2.5 text-gray-800 ">/</span>
+            <span className="ml-1 text-sm font-medium text-gray-800 hover:underline md:ml-2">
+             Edit Restaurants
+            </span>
+          </div>
+        </li>
+      </ol>
+    </nav>
+    <div  className='rounded-md shadow-md  bg-slate-200   border-gray-700  p-3 m-4'>
+
     {/* <Toaster position='top-center' reverseOrder={false} ></Toaster> */}
       
 
@@ -157,6 +209,17 @@ id="file" name="resImages" type="file"
 className="file-input file-input-bordered file-input-accent w-full max-w-xs" />
 
 <img className='py-4' width="200px" height="200px" src={image?image:secureUrl}></img>
+
+</div>
+
+
+<div className='py-5'>
+<input 
+onChange={handleResImageTwo}
+id="fileTwo" name="resImagesTwo" type="file"
+className="file-input file-input-bordered file-input-accent w-full max-w-xs" />
+ 
+<img className='py-4' width="200px" height="200px" src= {imageTwo?imageTwo:secureUrlTwo}></img>
 </div>
 
 <div className='space-x-5'>

@@ -1,5 +1,6 @@
 const User = require('../model/user/user')
 const Dish=require('../model/owner/dishes')
+const Table=require('../model/owner/table')
 let ObjectId=require('mongoose').Types.ObjectId
 const Restaurant=require('../model/owner/restaurants')
 const bcrypt = require('bcrypt');
@@ -197,4 +198,29 @@ exports.getSpecificDish=async(req,res)=>{
     } catch (error) {
         res.send(error)
     }
+}
+//get all tables
+
+exports.tableData=async(req,res)=>{
+    try {
+        const {id}=req.params
+      const data=await Table.find({ownerId:new ObjectId(id)})
+      console.log(data,'table data');
+      if(data){
+        res.status(200).send({data:data})
+      }else{
+        res.status(500).send({msg:'something went wrong'})
+      }
+    } catch (error) {
+        res.send(error)
+    }
+
+    
+}
+
+
+
+//checkout
+exports.checkoutData=(req,res)=>{
+    console.log(req.body,'checkout body');
 }

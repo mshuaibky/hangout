@@ -1,69 +1,66 @@
 import React,{useState,useEffect} from 'react'
 import {useFormik} from 'formik'
 import toast, {Toaster} from 'react-hot-toast'
-import{useNavigate} from 'react-router-dom'
+import{useNavigate,Link} from 'react-router-dom'
 import {resDetails} from '../../helpers/ownerHelper'
+import {Home} from 'lucide-react'
 
 
 
 
 
-
-const validate=values=>{
-  const errors={}
-
-
-  //username
-  if(!values.resName){
-    errors.resName = toast.error('name is required')
-}else if(values.resName.length < 4){
-    errors.resName = toast.error('name should contain atleast Four characters')
-}
-//resAddress
-if(!values.resAddress){
-  errors.resAddress = toast.error('Address Required')
-}else if(values.resAddress.length < 4){
-  errors.resAddress = toast.error('Address should contain atleast Four characters')
-}
-//number of tables
-if(!values.numberOfTables){
-  errors.numberOfTables = toast.error('table number is Required')
-}
-//phone
-if(!values.phone){
-  errors.phone = toast.error('phone Required')
-}else if(values.phone.length<10){
-  errors.phone=toast.error('enter valid phone number')
-}
-
-
-return errors
-
-}
 function AddRestaurant() {
   const ownerId = localStorage.getItem('ownerId');
-console.log(ownerId,'namma ownerId');
+ 
   const [image,setImage]=useState('')
-  const [error,setError]=useState('')
-  const validateFile=(image)=>{
-    if (!image) {
-      setError("please upload a file");
-      return false;
-    }
+  const [imageTwo,setImageTwo]=useState('')
+
+  //validation
+  const validate=values=>{
+    const errors={}
+  
+  
+    //username
+    if(!values.resName){
+      errors.resName = toast.error('name is required')
+  }else if(values.resName.length < 4){
+      errors.resName = toast.error('name should contain atleast Four characters')
   }
-  useEffect(() => {
-    if (image !== null) {
-      const isValid = validateFile(image);
-      if (!isValid) {
-        setImage(null);
-      }
-    }
-  }, []);
+  //resAddress
+  if(!values.resAddress){
+    errors.resAddress = toast.error('Address Required')
+  }else if(values.resAddress.length < 4){
+    errors.resAddress = toast.error('Address should contain atleast Four characters')
+  }
+  //number of tables
+  if(!values.numberOfTables){
+    errors.numberOfTables = toast.error('table number is Required')
+  }
+  //phone
+  if(!values.phone){
+    errors.phone = toast.error('phone Required')
+  }else if(values.phone.length<10){
+    errors.phone=toast.error('enter valid phone number')
+  }
+  else if(!image){
+    errors.image=toast.error('image is required')
+  }
+  else if(!imageTwo){
+    errors.imageTwo=toast.error('image is required')
+  }
+  return errors
+  
+  }
+
+  
+ 
   const handleResImage=(e)=>{
     const file=e.target.files[0]
+   
     TransformFile(file)
   };
   const TransformFile=(file)=>{
+    
     const reader=new FileReader()
     if(file){
       reader.readAsDataURL(file);
@@ -74,6 +71,27 @@ console.log(ownerId,'namma ownerId');
       setImage("")
     }
   }
+
+  const handleResImageTwo=(e)=>{
+    const file=e.target.files[0]
+    if(!file){
+      toast.error('please upload image')
+    }
+    TransformFileTwo(file)
+  };
+  const TransformFileTwo=(file)=>{
+    const reader=new FileReader()
+    if(file){
+      reader.readAsDataURL(file);
+      reader.onloadend=()=>{
+        setImageTwo(reader.result)
+      }
+    }else{
+      setImageTwo("")
+    }
+  }
+
+
  
   const navigate=useNavigate()
   const formik=useFormik({
@@ -92,12 +110,13 @@ console.log(ownerId,'namma ownerId');
     validateOnBlur:false,
     validateOnChange:false,
     onSubmit:async values=>{
+      console.log(values,'all values');
      let img={image:image}
+      let imgTwo={imageTwo:imageTwo}
     
-     console.log(img);    
      let id={ownerId:ownerId}
-     const imgCopy=Object.assign({},values,img,id)
-     console.log(imgCopy);
+     const imgCopy=Object.assign({},values,img,imgTwo,id)
+     
    
       let details=resDetails(imgCopy)
       toast.promise(details,{
@@ -111,11 +130,45 @@ console.log(ownerId,'namma ownerId');
         }
       })
     }
+
+    
   })
 
   return (
-    
-    <div className='p-10'>
+    <div>
+      {/* Breadcrumb */}
+ <nav className="m-3 flex  min-w-fit items-start rounded-md bg-gray-100 p-2" aria-label="Breadcrumb">
+      <ol className="inline-flex items-center space-x-1 md:space-x-3">
+        <li className="inline-flex items-center">
+          <Link to={'/owner-home'}
+            href="#"
+            className="ml-1 inline-flex text-sm font-medium text-gray-800 hover:underline md:ml-2"
+          >
+            <Home className="mr-4 h-4 w-4" />
+            Home
+          </Link>
+        </li>
+        <li>
+          <div className="flex items-center">
+            <span className="mx-2.5 text-gray-800 ">/</span>
+            <Link to={'/owner-home'}
+             href="#" className="ml-1 text-sm font-medium text-gray-800 hover:underline md:ml-2">
+             Restaurants
+            </Link>
+          </div>
+        </li>
+        <li aria-current="page">
+          <div className="flex items-center">
+            <span className="mx-2.5 text-gray-800 ">/</span>
+            <span className="ml-1 text-sm font-medium text-gray-800 hover:underline md:ml-2">
+             Add Restaurants
+            </span>
+          </div>
+        </li>
+      </ol>
+    </nav>
+   
+    <div className='rounded-md bg-slate-200 border-gray-700 shadow-md p-3 m-4'>
     <Toaster position='top-center' reverseOrder={false} ></Toaster>
       
 
@@ -213,15 +266,28 @@ console.log(ownerId,'namma ownerId');
      
       
       />
-
+<div class="grid grid-cols-2 gap-4">
 <div className='py-5'>
 <input 
 onChange={handleResImage}
 id="file" name="resImages" type="file"
 className="file-input file-input-bordered file-input-accent w-full max-w-xs" />
-  {image==null ? <p style={{color:'red'}}>{error}</p>:""}
-    {image?
-<img className='py-4' width="200px" height="200px" src={image }></img>:""}
+ {
+  image?
+<img className='py-4' width="200px" height="200px" src={image }></img>:""
+ }
+</div>
+
+<div className='py-5'>
+<input 
+onChange={handleResImageTwo}
+id="fileTwo" name="resImagesTwo" type="file"
+className="file-input file-input-bordered file-input-accent w-full max-w-xs" />
+ {
+  imageTwo?
+<img className='py-4' width="200px" height="200px" src= {imageTwo?imageTwo:""}></img>:""
+ }
+</div>
 </div>
 
 <div className='space-x-5'>
@@ -241,6 +307,7 @@ className="file-input file-input-bordered file-input-accent w-full max-w-xs" />
 </div>
       
     </form>
+    </div>
     </div>
   )
 }

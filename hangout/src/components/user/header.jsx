@@ -5,15 +5,15 @@ import {Menu,X} from 'lucide-react'
 const menuItems = [
   {
     name: 'Home',
-    href: '#',
+    href: '/',
   },
   {
     name: 'About',
-    href: '#',
+    href: '/',
   },
   {
     name: 'Contact',
-    href: '#',
+    href: '/',
   },
 ]
 function Header() {
@@ -41,7 +41,7 @@ function Header() {
               />
             </svg>
           </span>
-          <span className="font-bold">DevUI</span>
+          <span className="font-bold"> HANGOUT</span>
         </div>
         <div className="hidden lg:block">
           <ul className="inline-flex space-x-8">
@@ -59,12 +59,12 @@ function Header() {
         </div>
 
         <div className="hidden lg:block">
-          <button
+          {/* <button
             type="button"
             className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
           >
           Logout
-          </button>
+          </button> */}
         </div>
         <div className="lg:hidden">
           <Menu onClick={toggleMenu} className="h-6 w-6 cursor-pointer" />
@@ -89,7 +89,7 @@ function Header() {
                         />
                       </svg>
                     </span>
-                    <span className="font-bold">DevUI</span>
+                    <span className="font-bold">HANGOUT</span>
                   </div>
                   <div className="-mr-2">
                     <button
@@ -117,12 +117,12 @@ function Header() {
                     ))}
                   </nav>
                 </div>
-                <button
+                {/* <button
                   type="button"
                   className="mt-4 w-full rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
                 >
                  Logout
-                </button>
+                </button> */}
               </div>
             </div>
           </div>

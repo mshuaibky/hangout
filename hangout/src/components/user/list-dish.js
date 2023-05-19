@@ -1,47 +1,70 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom';
+import { useParams,Link } from 'react-router-dom';
 import { dishDetails } from '../../helpers/userHelpers'
 import { Plus, Minus } from 'lucide-react'
 
-function ListDish() {
-    const { id } = useParams()
-    // console.log(id, 'iddd');
-    const [dishData, setDishData] = useState([])
-    let [count, setCount] = useState(0)
-    console.log(count,'namma count');
-    useEffect(() => {
-        dishDetails(id).then((dishDetails) => {          
-            const updatedDishData = dishDetails.data.data.map(dish => ({ ...dish, count: 0 }));
-        setDishData(updatedDishData);
-        })
-    }, [])
-  
-    const handleIncrement = (dishId) => {
-        setDishData(prevDishData => {
-            console.log(prevDishData,'previus Dish data');
-            return prevDishData.map(dish => {
-                if (dish._id === dishId) {
-                    setCount(dish.count+1)
-                    return { ...dish, count: dish.count + 1 };
-                } else {
-                    return dish;
-                }
-            });
-        });
-    };
-    const handleDecrement=(dishId)=>{
-        setDishData(prevDishData => {
-            return prevDishData.map(dish => {
-                if (dish._id === dishId) {
-                    setCount(dish.count-1)
-                    return { ...dish, count: dish.count - 1 };
-                } else {
-                    return dish;
-                }
-            });
-        });
-    }
 
+function ListDish() {
+
+
+    const { id } = useParams();
+    const [state, setState] = useState(false);
+    const [dishData, setDishData] = useState([]);
+  
+    useEffect(() => {
+      const storedDishData = sessionStorage.getItem('dishData');
+  
+      if (storedDishData) {
+        setDishData(JSON.parse(storedDishData));
+      } else {
+        dishDetails(id).then((dishDetails) => {
+          const updatedDishData = dishDetails.data.data.map((item) => ({
+            ...item,
+            count: 0,
+            total: 0,
+          }));
+          setDishData(updatedDishData);
+  
+          sessionStorage.setItem('dishData', JSON.stringify(updatedDishData));
+        });
+      }
+    }, [id]);
+  
+    const handleIncrement = (itemId) => {
+      const updatedDishData = dishData.map((item) => {
+        if (item._id === itemId) {
+          const updatedItem = {
+            ...item,
+            count: item.count + 1,
+            total: (item.count + 1) * item.price, // Calculate the new total
+          };
+          sessionStorage.setItem(itemId, JSON.stringify(updatedItem));
+          return updatedItem;
+        }
+        return item;
+      });
+      setDishData(updatedDishData);
+      setState(true);
+      sessionStorage.setItem('dishData', JSON.stringify(updatedDishData));
+    };
+  
+    const handleDecrement = (itemId) => {
+      const updatedDishData = dishData.map((item) => {
+        if (item._id === itemId) {
+          const newCount = item.count - 1;
+          const updatedItem = {
+            ...item,
+            count: newCount >= 0 ? newCount : 0,
+            total: (newCount >= 0 ? newCount : 0) * item.price, // Calculate the new total
+          };
+          sessionStorage.setItem(itemId, JSON.stringify(updatedItem));
+          return updatedItem;
+        }
+        return item;
+      });
+      setDishData(updatedDishData);
+      sessionStorage.setItem('dishData', JSON.stringify(updatedDishData));
+    };
     return (
         <div class="h-screen w-full flex bg-white-800">
 
@@ -87,26 +110,17 @@ function ListDish() {
                                             </div>
                                             <div class=" mt-4 flex ">
                                                 <div class="flex-none w-14 h-14 ...">
-                                                    {
-                                                        count<1?
+
                                                     <button
-                                                    disabled
-                                                       onClick={()=>{handleDecrement(items._id,items)}}
+
+                                                        onClick={() => { handleDecrement(items._id) }}
                                                         type="button"
                                                         className=" rounded-full bg-red-500 px-3 py-3 text-sm font-semibold text-white shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red"
                                                     >
                                                         <Minus className="h-4 w-4" />
-                                                    </button>:
-                                                      <button
-                                                     
-                                                         onClick={()=>{handleDecrement(items._id,items)}}
-                                                          type="button"
-                                                          className=" rounded-full bg-red-500 px-3 py-3 text-sm font-semibold text-white shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red"
-                                                      >
-                                                          <Minus className="h-4 w-4" />
-                                                      </button>
+                                                    </button>
 
-                                                    }
+
                                                 </div>
                                                 <div class="grow h-14 w-10 ...">
                                                     <input type="text"
@@ -120,7 +134,7 @@ function ListDish() {
                                                 </div>
                                                 <div class="flex-none w-14 h-14 ...">
                                                     <button
-                                                        onClick={()=>handleIncrement(items._id,items)}
+                                                        onClick={() => handleIncrement(items._id)}
                                                         type="button"
                                                         className="ms-2 rounded-full bg-red-500 px-3 py-3 text-sm font-semibold text-white shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red"
                                                     >
@@ -139,42 +153,54 @@ function ListDish() {
             </main>
 
 
+            <article className="rounded-lg border w-96 bg-gray-200  mt-10 me-6 p-4">
+                {
+                    dishData.map((dishes) => {
+                     
+                        return (
+                            
+                            <div className="flex items-center justify-between mt-5 ">
 
-            <div className='bg-slate-200 p-4 rounded mt-12 me-5'>
+                                {
+                                    dishes.count ?
+                                        <div>
+                                            <p className="text-xl text-gray-500">{dishes.name}</p>
+                                            <p className="text-base text-black-400">quantity:{dishes.count}</p>
+                                            <p className="text-lg font-medium text-gray-900 mt-2">Total:{dishes.count * dishes.price}</p>
+                                        </div> : ""
+                                }
+                                {
+                                    dishes.count ?
+                                        <span className="rounded-md p-4 text-blue-600">
+                                            {
+                                                dishes.image.map((image) => {
+                                                    return (
+                                                        <img className='object-cover  rounded-lg w-24 h-24' src={image.secure_url} alt="" />)
+                                                })
+                                            }
+                                        </span> : ""
+                                }
 
 
-                <a href="#" className="block rounded-lg p-4 shadow-sm shadow-indigo-100">
-                    <img
-                        alt="Home"
-                        src="https://images.unsplash.com/photo-1613545325278-f24b0cae1224?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-                        className="h-56 w-full rounded-md object-cover"
-                    />
 
-                    <div className="mt-2">
-                        <dl>
-                            <div>
-                                <dt className="sr-only">Price</dt>
-
-                                <dd className="text-sm text-gray-500">price: $240,000</dd>
                             </div>
+                        )
 
-                            <div>
-                                <dt className="sr-only">Address</dt>
+                    })
+                }
 
-                                <dd className="font-medium">Quantity:3</dd>
-                            </div>
-                        </dl>
-
-                        <div className="mt-6 flex items-center gap-8 text-xs">
-
-
-
-
-
-                        </div>
-                    </div>
-                </a>
-            </div>
+            {
+                state&&
+            <div className='text-center mt-5'>
+                    <Link to={'/user/checkout'}
+                        type="button"
+                        class="w-full rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-600/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+                    >
+                        Next
+                    </Link>
+                </div>
+            }
+            </article>
 
         </div>
     )

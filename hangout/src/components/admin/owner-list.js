@@ -5,7 +5,30 @@ import {getOwnerDetails,blockOwner,AcceptUser} from '../../helpers/adminHelpers'
 function OwnerList() {
     
     const [data,setData]=useState([])
- 
+    console.log(data,'namma data');
+    const [currentPage, setCurrentPage] = useState(1)
+  const recordsPerPage = 2
+  const lastIndex = currentPage * recordsPerPage
+  const firstIndex = lastIndex - recordsPerPage
+  const records = data.slice(firstIndex, lastIndex)
+  console.log(records,'records');
+  const nPage = Math.ceil(data.length / recordsPerPage)
+  console.log(nPage,'page');
+  const numbers=[...Array(nPage+1).keys()].slice(1)
+
+  const prePage=()=>{
+    if(currentPage!==1){
+     setCurrentPage(currentPage-1)
+    }
+  }
+  const changePage=(id)=>{
+  setCurrentPage(id)
+  }
+  const nextPage=()=>{
+ if(currentPage!==nPage){
+   setCurrentPage(currentPage+1)
+ }
+  }
 
     useEffect(()=>{
         async function getData(){
@@ -97,13 +120,13 @@ function OwnerList() {
                       >
                         Status
                       </th>
-
+{/* 
                       <th
                         scope="col"
                         className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400"
                       >
                  fssai Code
-                      </th>
+                      </th> */}
                       <th scope="col" className="relative py-3.5 px-4">
                         <span className="sr-only">Edit</span>
                       </th>
@@ -155,9 +178,9 @@ function OwnerList() {
                         </span>
                       </td>
                       }
-                        <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                        {/* <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
                  {data.code}
-                        </td>
+                        </td> */}
                         <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
                           
                            {data.isOwner?
@@ -184,6 +207,35 @@ function OwnerList() {
           </div>
         </div>
       </section>
+      <div className='align-content: flex-end;'>
+
+<div className=" mx-4 flex items-center">
+  <a onClick={prePage} href="#" className=" text-sm font-semibold text-gray-900 ">
+    Previous
+  </a>
+  {
+   numbers.map((n,i)=>{
+
+ return(
+  <a
+  onClick={()=>{changePage(n)}}
+    key={i}
+    href="#"
+    className={`mx-2 flex items-center rounded-md border border-gray-400 px-3 py-1 text-gray-900 hover:scale-105`}
+  >
+{n}
+  </a>)
+    })
+  }
+
+
+  <a 
+  onClick={nextPage}
+  href="#" className="mx-2 text-sm font-semibold text-gray-900">
+    Next
+  </a>
+</div>
+</div>
     </div>
   )
 }

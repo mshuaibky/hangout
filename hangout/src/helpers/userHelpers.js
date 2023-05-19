@@ -93,3 +93,23 @@ export async function dishDetails(id){
         })
     })
 }
+
+export async function getTableData(id){
+    return new Promise((resolve,reject)=>{
+        axios.get(`http://localhost:4000/table-data${id}`).then((data)=>{
+            resolve(data)
+        }).catch((error)=>{
+            reject(error)
+        })
+    })
+}
+//checkout
+export async function checkoutData(data){
+    return new Promise((resolve,reject)=>{
+        axios.post('http://localhost:4000/checkout',data).then((data)=>{
+            resolve(data)
+        }).catch((error)=>{
+            reject(error)
+        })
+    })
+}

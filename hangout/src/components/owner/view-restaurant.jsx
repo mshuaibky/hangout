@@ -53,14 +53,16 @@ console.log(ownerId,'namma ownerId');
   </div>
    <div className="p-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-5">
    {details?.map((data)=>{
+    console.log(data,'namma data');
     return(
       <div
         key='id'
         className="rounded overflow-hidden shadow-lg dark:shadow-gray-800"
       >
-{data?.resImages?.map((image)=>{
-      return(  <img className="h-48 w-96 object-cover" src={image?.secure_url} alt="Mountain" />)
-      })}
+
+  
+        <img className="h-48 w-96 object-cover" src={data.resImages[0].secure_url} alt="Mountain" />
+    
         <div className="px-6 py-4">
           <div className="font-bold text-xl mb-2">{data.resName}</div>
           <p className="text-gray-700 dark:text-gray-300 text-base">

@@ -11,6 +11,7 @@ function OwnerDetails() {
     const [image,setImage]=useState('')
  
     const validate=values=>{
+       
         const errors={}
         
      //username
@@ -40,18 +41,11 @@ function OwnerDetails() {
       }
     
       else if (!image) {
-        errors.image = toast.error("must contain a image")
+        errors.image = toast.error("image is required")
     }
         return errors
     }
-    //   useEffect(() => {
-    //     if (image !== null) {
-    //       const isValid = validateFile(image);
-    //       if (!isValid) {
-    //         setImage(null);
-    //       }
-    //     }
-    //   }, []);
+  
       const handleResImage=(e)=>{
         console.log(e,'eeee');
         const file=e.target.files[0]
