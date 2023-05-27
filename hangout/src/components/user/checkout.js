@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import Image from '../../assets/hotel.png'
 import { getTableData,checkoutData } from '../../helpers/userHelpers'
 
 
 
 function Checkout() {
+  const user = localStorage.getItem('persist:1');
+  const parsedData = JSON.parse(user);
+  const userId = JSON.parse(parsedData.user).user.user;
+
+
   const ownerId = localStorage.getItem('ownerId');
   const dishData = sessionStorage.getItem('dishData');
   const allDishData = JSON.parse(dishData);
-  console.log(allDishData,'dish Data oooo');
   const [button,setButton]=useState('')
-   console.log(button,'namm butoon');
   const [selectedValue,setSelectedValue]=useState('')
-  console.log(selectedValue);
   const [table, setTable] = useState([])
-
+  const navigate=useNavigate()
   useEffect(() => {
     getTableData(ownerId).then((data) => {
   
@@ -25,16 +27,22 @@ function Checkout() {
 
 
   const handleClick=(e)=>{
-   
     const value=e.target.value
     
     setButton(value)
   }
    
   const handlePayment=()=>{
-     const allData={allDishData,button,selectedValue}
-     const checkout=checkoutData(allData)
-     console.log(allData,'ella datam ind');
+     const allData={allDishData,button,selectedValue,userId}
+     checkoutData(allData).then((data)=>{
+      if(data){
+        const order=data.data.data
+        sessionStorage.setItem('orderDetails', JSON.stringify(order));
+        navigate('/payment')
+      }
+     })
+   
+    
   }
 
 

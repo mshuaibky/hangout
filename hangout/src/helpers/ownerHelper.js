@@ -1,5 +1,5 @@
 import axios from 'axios';
-// axios.defaults.withCredentials = true
+axios.defaults.withCredentials = true
 
 export async function ownerRegister(credentials){
     console.log(credentials,'credentials');
@@ -171,3 +171,67 @@ export async function getTableData(id){
         })
     })
 }
+//getting orders of owner
+export async function getOrders(id){
+    return new Promise((resolve,reject)=>{
+        axios.get(`http://localhost:4000/owner/get-order-owner${id}`).then((data)=>{
+            
+          
+            resolve(data)
+        }).catch((error)=>{
+            reject(error)
+        })
+    })
+  }
+  //getting paginated orders
+
+  export async function getpaginatedOrder(page,id){
+    return new Promise((resolve,reject)=>{
+        axios.get(`http://localhost:4000/owner/get-paginated-order?page=${page}&&id=${id}`).then((data)=>{
+            if(data){
+                resolve(data)
+            }
+        }).catch((error)=>{
+            reject(error)
+        })
+    })
+  }
+  //adding owner banner
+
+  export async function bannerDetails(data){
+  return new Promise((resolve,reject)=>{
+    axios.post('http://localhost:4000/owner/banner-details',data).then((result)=>{
+        if(result){
+            resolve(result)
+        }
+    }).catch((error)=>{
+        reject(error)
+    })
+  })
+  }
+  //getting banners
+
+  export async function getBanners(id){
+    return new Promise((resolve,reject)=>{
+        axios.get(`http://localhost:4000/owner/get-banner${id}`).then((data)=>{
+            if(data){
+                resolve(data)
+            }
+        }).catch((error)=>{
+            reject(error)
+        })
+    })
+  }
+  //deleteBAnner
+
+  export async function bannerDelete(bannerId,ownerId){
+    return new Promise((resolve,reject)=>{
+        axios.get(`http://localhost:4000/owner/delete-banner/${bannerId}/${ownerId}`).then((data)=>{
+            if(data){
+                resolve(data)
+            }
+        }).catch((error)=>{
+            reject(error)
+        })
+    })
+  }

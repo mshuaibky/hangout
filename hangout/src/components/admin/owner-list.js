@@ -33,7 +33,7 @@ function OwnerList() {
     useEffect(()=>{
         async function getData(){
             let data=await getOwnerDetails()
-                setData(data.data.data)
+                setData(data?.data?.data)
             
         }
         getData();

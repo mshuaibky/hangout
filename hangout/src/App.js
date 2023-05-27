@@ -23,6 +23,11 @@ import LishDishPage from './pages/user/list-dish-page';
 import AddTablePage from './pages/owner/add-table-page';
 import TableForm from './components/owner/table-form';
 import CheckoutPage from './pages/user/checkout-page';
+import PaymentPage from './pages/user/payment-page';
+import OrderPage from './pages/user/order-page';
+import OrderPageOwner from './pages/owner/order-page-owner';
+import ViewBannerPage from './pages/owner/view-banner-page';
+import AddBanner from './components/owner/add-banner';
 
 function App() {
   return (
@@ -39,6 +44,8 @@ function App() {
      <Route path='/user/otp' element={<Otp/>}/>
      <Route path='/user/dish-listing/:id' element={<LishDishPage/>}/>
      <Route path='/user/checkout' element={<CheckoutPage/>}/>
+     <Route path='/payment'  element={<PaymentPage/>}/>
+     <Route path='/orders'  element={<OrderPage/>}/>
       
      {/* Owner route */}
 
@@ -53,6 +60,9 @@ function App() {
      <Route path='/owner/more-details' element={<OwnerDetailPage/>}/>
      <Route path='/owner/add-table' element={<AddTablePage/>}/>
      <Route path='/owner/table-form' element={<TableForm/>}/>
+     <Route path='/owner/order' element={<OrderPageOwner/>}/>
+     <Route path='/owner/banner' element={<ViewBannerPage/>}/>
+     <Route path='/owner/add-banner' element={<AddBanner/>}/>
 
 
       {/* admin Routes */}

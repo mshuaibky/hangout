@@ -28,15 +28,15 @@ function AddTable() {
 
             <div className="mt-7 mx-6 grid grid-cols-5 gap-1">
                 {
-                    data.map((item)=>{
+                    data?.map((item)=>{
                   return(
                 <button
                     type="button"
                     className="w-28 h-28 rounded-md bg-green-900 px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
                 >
-                   <p>{item.number}</p>
+                   <p>{item?.number}</p>
                    {
-                    item.isBooked?
+                    item?.isBooked?
                     <p>booked</p>: <p>Available</p>
                    }
 

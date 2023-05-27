@@ -8,6 +8,10 @@ const menuItems = [
     href: '/',
   },
   {
+    name:'Orders',
+    href:'/orders'
+  },
+  {
     name: 'About',
     href: '/',
   },

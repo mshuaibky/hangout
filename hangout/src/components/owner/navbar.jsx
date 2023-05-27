@@ -54,14 +54,22 @@ function Navbar() {
                   Dishes
                 </Link>
               </li>
-  
               <li>
-                <a
+                <Link to={'/owner/add-table'}
                   className="text-gray-500 transition hover:text-gray-500/75"
                  
                 >
-                  Events
-                </a>
+                  Tables
+                </Link>
+              </li>
+  
+              <li>
+                <Link to={'/owner/order'}
+                  className="text-gray-500 transition hover:text-gray-500/75"
+                 
+                >
+                  orders
+                </Link>
               </li>
   
   

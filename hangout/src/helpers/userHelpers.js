@@ -1,3 +1,4 @@
+
 import axios from 'axios';
 axios.defaults.withCredentials = true
 
@@ -113,3 +114,69 @@ export async function checkoutData(data){
         })
     })
 }
+
+//gettting orders
+
+export async function getOrders(id){
+    return new Promise((resolve,reject)=>{
+        axios.get(`http://localhost:4000/get-orders${id}`).then((data)=>{
+            resolve(data)
+        }).catch((error)=>{
+            reject(error)
+        })
+    })
+}
+//verify payment
+export async function paymentDetails(details){
+    return new Promise((resolve,reject)=>{
+        axios.post('http://localhost:4000/confirm-payment',details).then((data)=>{
+            resolve(data)
+        }).catch((error)=>{
+            reject(error)
+        })
+    })
+}
+//getting orders order by user
+export async function orderDetails(id){
+ return new Promise((resolve,reject)=>{
+    axios.get(`http://localhost:4000/user-order${id}`).then((data)=>{
+        if(data){
+            resolve(data)
+        }
+    })
+ })
+}
+//getting the perticuler user
+export async function getUser(id){
+    return new Promise((resolve,reject)=>{
+       axios.get(`http://localhost:4000/get-user${id}`).then((data)=>{
+           if(data){
+               resolve(data)
+           }
+       })
+    })
+   }
+   //paginated restaurants
+   export async function getPaginatedRes(page){
+   return new Promise((resolve,reject)=>{
+    axios.get(`http://localhost:4000/get-paginated-data?page=${page}`).then((data)=>{
+        if(data){
+            resolve(data)
+        }
+    }).catch((error)=>{
+        reject(error)
+    })
+   })
+   }
+   //pagintated order
+   export async function userpaginatedOrder(page,id){
+    return new Promise((resolve,reject)=>{
+        axios.get(`http://localhost:4000/user-paginated-order?page=${page}&&${id}`).then((data)=>{
+            if(data){
+                resolve(data)
+            }
+        }).catch((error)=>{
+            reject(error)
+        })
+    })
+   }

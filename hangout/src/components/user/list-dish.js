@@ -78,7 +78,7 @@ function ListDish() {
                 <div class="px-10 grid grid-cols-3 gap-4 ">
                     {
                         dishData.map((items) => {
-
+         console.log(items,'namm aitmms');
                             return (
                                 <div
                                     class="col-span-4 sm:col-span-4 md:col-span-2 lg:col-span-1 xl:col-span-1 flex flex-col items-center"
@@ -102,7 +102,7 @@ function ListDish() {
                                             <span class="font-bold text-gray-800 text-lg">{items.name}</span>
                                             <div class="flex items-center justify-between">
                                                 <div class="text-sm text-gray-600 font-light">
-                                                    Size : Regular
+                                                    catagory : {items.catagory}
                                                 </div>
                                                 <div class="text-lg text-red-500 font-bold">
                                                     RS:{items.price}
