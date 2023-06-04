@@ -31,17 +31,6 @@ function ListRestaurant() {
             console.log(result,'namma data');
             setData(result?.data?.data)
         })
-
-        // // getPaginatedRes(page).then((datas)=>{
-        // //     console.log('dkkdk');
-        // //     console.log(datas,'paginated data');
-        // //     setData(datas?.data?.data)
-           
-        // //     if(datas){
-             
-        // //         setPageCount(datas?.data?.pageCount)
-        // //     }
-        // })
     
     }, [])
   
@@ -62,21 +51,7 @@ function ListRestaurant() {
       }
 
 
-//    const handlePrev=()=>{
 
-//      setPage((p)=>{
-//         if(p===1)return p
-//         return p-1
-//      })
-//    }
-// const handleNext=()=>{
-    
-// setPage((p)=>{
-   
-//     if(p=== pageCount)return p 
-//     return p+1
-// })
-// }
     return (
         <div >
             <form class="flex items-center mt-4  mx-20">   

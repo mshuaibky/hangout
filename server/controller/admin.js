@@ -2,6 +2,7 @@ const Admin=require('../model/admin/admin')
 const User=require('../model/user/user')
 const Owner=require('../model/owner/owner')
 const Details=require('../model/owner/details-restaurant')
+const Restuarant=require('../model/owner/restaurants')
 const bcrypt=require('bcrypt')
 const jwt=require('jsonwebtoken')
 const maxAge = 1 * 24 * 60 * 60
@@ -132,6 +133,20 @@ exports.acceptUser=async(req,res)=>{
      }else{
         res.status(500).send({msg:'data not changed'})
      }
+    } catch (error) {
+        res.send(error)
+    }
+ }
+ //getting all restaurants
+ exports.getAllRes=async(req,res)=>{
+    try {
+        let restaurant=await Restuarant.find({})
+        console.log(restaurant,'res database');
+        if(restaurant){
+            res.status(200).send({data:restaurant})
+        }else{
+            res.status(500).send({msg:'something went wrong'})
+        }
     } catch (error) {
         res.send(error)
     }

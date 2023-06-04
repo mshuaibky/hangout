@@ -235,3 +235,28 @@ export async function getOrders(id){
         })
     })
   }
+  //getting one order by id
+
+  export async function getOneOrder(id){
+    return new Promise((resolve,reject)=>{
+        axios.get(`http://localhost:4000/owner/get-one-order${id}`).then((data)=>{
+            if(data){
+                resolve(data)
+            }
+        }).catch((error)=>{
+            reject(error)
+        })
+    })
+  }
+  //removing tables
+  export async function deleteTable(id){
+    return new Promise((resolve,reject)=>{
+        axios.get(`http://localhost:4000/owner/delete-table${id}`).then((data)=>{
+            if(data){
+                resolve(data)
+            }
+        }).catch((error)=>{
+            reject(error)
+        })
+    })
+  }

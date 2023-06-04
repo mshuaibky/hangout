@@ -1,6 +1,8 @@
 const User = require('../model/user/user')
 const Dish=require('../model/owner/dishes')
 const Table=require('../model/owner/table')
+const Order=require('../model/user/order')
+const moment=require('moment')
 let ObjectId=require('mongoose').Types.ObjectId
 const Restaurant=require('../model/owner/restaurants')
 const bcrypt = require('bcrypt');
@@ -205,7 +207,7 @@ exports.tableData=async(req,res)=>{
     try {
         const {id}=req.params
       const data=await Table.find({ownerId:new ObjectId(id)})
-      console.log(data,'table data');
+   
       if(data){
         res.status(200).send({data:data})
       }else{
@@ -222,5 +224,172 @@ exports.tableData=async(req,res)=>{
 
 //checkout
 exports.checkoutData=(req,res)=>{
-    console.log(req.body,'checkout body');
+    console.log(req.body,'kkk');
+   try {
+    const {button,selectedValue,userId,date,time}= req.body
+    let order= new Order({
+     orderDetails:req.body.allDishData,
+     tableNo:button,
+     orderType:selectedValue,
+     userId,
+     date,
+     time
+    })
+   order.save().then((response)=>{
+     console.log(response,'databaseREsponse');
+     if(response){
+         res.status(200).send({data:response})
+     }else{
+         res.status(500).send({msg:'something went wrong'})
+     }
+   })
+   } catch (error) {
+    res.send(error)
+   }
+}
+
+//getting all orders
+
+exports.getAllOrders=async(req,res)=>{
+    try {
+        const {id}=req.params
+        console.log(id,'userId');
+        const orders= await Order.find({userId:new ObjectId(id)})
+        console.log(orders,'nmaa order');
+    } catch (error) {
+        
+    }
+}
+//confirm payment
+exports.confirmPayment=async(req,res)=>{
+    console.log(req.body,' confirmpayment');
+    try {
+       const {ownerId,id}=req.body 
+       let data=await Order.findByIdAndUpdate(id,{
+        $set:{
+            isBooked:true,
+            ownerId:ownerId,
+            isReserved:true
+        }
+       })
+      console.log(data,'databaseData');
+      if(data){
+        res.status(200).send({data:data})
+      }else{
+        res.status(500).send({msg:'something went wrong'})
+      }
+    } catch (error) {
+        res.send({msg:error})
+    }
+}
+//getting orders by user
+exports.getUserOrder=async(req,res)=>{
+    try {
+        const {id}=req.params
+        let orders=await Order.find({userId:new ObjectId(id)})
+    
+        if(orders){
+            res.status(200).send({data:orders})
+        }else{
+            res.status(500).send({msg:'something went wrong'})
+        }
+    } catch (error) {
+        res.send(err)
+    }
+}
+//getting the details of the orderd user
+exports.getUserDetails=async(req,res)=>{
+    try {
+        const {id}=req.params
+        console.log(id,'id');
+        let user= await User.findById(id)
+        console.log(user,'database user');
+        if(user){
+            res.status(200).send({data:user})
+        }else{
+            res.statu(500).send({msg:'something went wrong'})
+        }
+    } catch (error) {
+        res.send(error)
+    }
+}
+//getting paginated data
+
+exports.paginatedData=async(req,res)=>{
+   
+try {
+   const items_perPage=2
+   const page=req.query.page||1
+   const skip=Math.floor((page-1)*items_perPage)
+   const query={}
+   const count=await Restaurant.estimatedDocumentCount(query)
+   const result= await Restaurant.find(query).limit(items_perPage).skip(skip)
+   const pageCount=Math.floor(count/items_perPage)
+  
+    res.status(200).send({count:count,pageCount:pageCount,data:result})
+} catch (error) {
+    
+}
+}
+//user paginated order
+
+exports.paginatedOrderUser=async(req,res)=>{
+    try {
+        const items_perPage=2
+        const page=req.query.page||1
+        const skip=Math.floor((page-1)*items_perPage)
+        const query={}
+        const count=await Order.estimatedDocumentCount(query)
+        const result= await Order.find(query).limit(items_perPage).skip(skip)
+        const pageCount=Math.floor(count/items_perPage)
+       
+         res.status(200).send({count:count,pageCount:pageCount,data:result})
+    } catch (error) {
+        
+    }
+}
+//getting all dishes
+exports.getAlldish=async(req,res)=>{
+    try {
+       let dish=await Dish.find({})
+      if(dish){
+        res.status(200).send({data:dish})
+      }else{
+        res.status(500).send({msg:'no data found'})
+      }
+      
+    } catch (error) {
+        res.send(error)
+    }
+}
+//getting booked orders
+exports.bookedOrders=async(req,res)=>{
+    console.log(req.query,'query');
+    try {
+
+        const{id,date,time}=req.query
+        const outputFormat = 'YYYY-MM-DDTHH:mm:ss.SSSZ';
+        const convertDate=moment(date).format(outputFormat)
+         console.log(convertDate,'convertDate');
+        let orders=await Order.find({userId:new ObjectId(id)})
+       if(orders){
+       let bookedOrders=await Order.find({
+        time:time,
+       date:convertDate,
+        isBooked:true
+       })
+       console.log(bookedOrders,'bookedOrders');
+       if(bookedOrders){
+        res.status(200).send({data:bookedOrders})
+       }else{
+        res.status(500).send({msg:'no data'})
+       }
+       }else{
+        res.status(500).send({msg:'no data'})
+       }
+       
+    } catch (error) {
+       
+       res.send(error)
+    }
 }

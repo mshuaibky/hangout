@@ -128,8 +128,11 @@ export async function getOrders(id){
 }
 //verify payment
 export async function paymentDetails(details){
+    console.log(details,'api call');
     return new Promise((resolve,reject)=>{
         axios.post('http://localhost:4000/confirm-payment',details).then((data)=>{
+    console.log(data,'api call');
+         
             resolve(data)
         }).catch((error)=>{
             reject(error)
@@ -176,6 +179,32 @@ export async function getUser(id){
                 resolve(data)
             }
         }).catch((error)=>{
+            reject(error)
+        })
+    })
+   }
+
+   //getiing all dishes
+   export async function getallDishes(){
+    return new Promise((resolve,reject)=>{
+        axios.get('http://localhost:4000/get-all-dish').then((data)=>{
+            if(data){
+                resolve(data)
+            }
+        }).catch((error)=>{
+            reject(error)
+        })
+    })
+   }
+   //getting booked orders
+   export async function bookedOrders(id,date,time){
+    return new Promise((resolve,reject)=>{
+        axios.get(`http://localhost:4000/get-booked-orders?id=${id}&&date=${date}&&time=${time}`).then((data)=>{
+            if(data){
+                resolve(data)
+            }
+        }).catch((error)=>{
+            console.log(error,'errrr');
             reject(error)
         })
     })

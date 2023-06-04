@@ -16,6 +16,12 @@ const restaurantSchema=mongoose.Schema({
         type:String,
         required:true
     },
+    startTime:{
+       type:String
+    },
+    endTime:{
+    type:String
+    },
     
 wifi:{
     type:Boolean,

@@ -44,7 +44,7 @@ console.log(ownerId,'namma ownerId');
   return (
   <div className='p-5'>
     <div className='px-10 space-x-2'>
-      <Link to='/add-restaurant'>
+       <Link to='/add-restaurant'>
      <button
     class=" rounded-md border border-green-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-green-600 hover:bg-green-300">
  Add Restaurant

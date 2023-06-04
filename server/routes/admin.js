@@ -4,6 +4,7 @@ const {AdminSignUp,AdminLogin,allUsers,
     allOwners,
     blockOwner,
     acceptUser,
+    getAllRes
     
 }=require('../controller/admin')
 
@@ -17,5 +18,6 @@ router.get('/get-owner-data',allOwners)
 router.get('/handle-owner:id',blockOwner)
 router.get('/accept-user:id',acceptUser)
 router.get('/varify',varifyToken)
+router.get('/restaurants',getAllRes)
 
 module.exports= router

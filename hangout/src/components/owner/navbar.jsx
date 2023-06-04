@@ -55,6 +55,14 @@ function Navbar() {
                 </Link>
               </li>
               <li>
+                <Link to={'/owner/banner'}
+                  className="text-gray-500 transition hover:text-gray-500/75"
+                 
+                >
+                 Banners
+                </Link>
+              </li>
+              <li>
                 <Link to={'/owner/add-table'}
                   className="text-gray-500 transition hover:text-gray-500/75"
                  
@@ -62,7 +70,6 @@ function Navbar() {
                   Tables
                 </Link>
               </li>
-  
               <li>
                 <Link to={'/owner/order'}
                   className="text-gray-500 transition hover:text-gray-500/75"

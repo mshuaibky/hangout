@@ -67,6 +67,17 @@ export async function getUserDetails(){
         })
     })
   }
-  //getting orders for owner
-
+ //get all restaurants
+ 
+ export async function getRestaurant(){
+    return new Promise((resolve,reject)=>{
+        axios.get('http://localhost:4000/admin/restaurants').then((data)=>{
+            
+          
+            resolve(data)
+        }).catch((error)=>{
+            reject(error)
+        })
+    })
+  }
   

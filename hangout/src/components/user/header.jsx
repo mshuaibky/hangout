@@ -1,5 +1,5 @@
 import React from 'react'
-import {Link} from 'react-router-dom'
+
 import {Menu,X} from 'lucide-react'
 
 const menuItems = [
@@ -8,12 +8,12 @@ const menuItems = [
     href: '/',
   },
   {
-    name:'Orders',
-    href:'/orders'
+    name: 'Dish',
+    href: '/view-all-dishes',
   },
   {
-    name: 'About',
-    href: '/',
+    name:'Orders',
+    href:'/orders'
   },
   {
     name: 'Contact',
@@ -28,7 +28,7 @@ function Header() {
   }
 
   return (
-    <div className="relative w-full bg-white shadow-md">
+    <div className="relative w-full bg-white shadow-md ">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
         <div className="inline-flex items-center space-x-2">
           <span>
@@ -48,7 +48,7 @@ function Header() {
           <span className="font-bold"> HANGOUT</span>
         </div>
         <div className="hidden lg:block">
-          <ul className="inline-flex space-x-8">
+          <ul className="inline-flex space-x-8 p-3">
             {menuItems.map((item) => (
               <li key={item.name}>
                 <a

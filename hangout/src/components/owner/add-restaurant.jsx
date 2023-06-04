@@ -14,6 +14,9 @@ function AddRestaurant() {
  
   const [image,setImage]=useState('')
   const [imageTwo,setImageTwo]=useState('')
+  const [startTime,setStartTime]=useState('')
+  const [endTime,setEndtTime]=useState('')
+  console.log(startTime,endTime,'time');
 
   //validation
   const validate=values=>{
@@ -71,7 +74,16 @@ function AddRestaurant() {
       setImage("")
     }
   }
-
+const handleStart=(e)=>{
+const start=e.target.value
+console.log(start);
+setStartTime(start)
+}
+const handleEnd=(e)=>{
+  const end=e.target.value
+  console.log(end);
+  setEndtTime(end)
+}
   const handleResImageTwo=(e)=>{
     const file=e.target.files[0]
     if(!file){
@@ -102,7 +114,8 @@ function AddRestaurant() {
       phone:'',
       wifi:false,
       parking:false,
-      Ac:false
+      Ac:false,
+     
   
     },
     validate,
@@ -115,7 +128,9 @@ function AddRestaurant() {
       let imgTwo={imageTwo:imageTwo}
     
      let id={ownerId:ownerId}
-     const imgCopy=Object.assign({},values,img,imgTwo,id)
+     let sTime={startTime:startTime}
+     let eTime={endTime:endTime}
+     const imgCopy=Object.assign({},values,img,imgTwo,id,sTime,eTime)
      
    
       let details=resDetails(imgCopy)
@@ -216,6 +231,33 @@ function AddRestaurant() {
      
       
       />
+        <div class="flex justify-between items-center">
+        <label className="block font-medium text-gray-700 mb-2" htmlFor="name">
+     Select Time
+      </label>
+  <select onChange={handleStart} class="py-2 px-4 border border-gray-300 rounded">
+
+    <option value='9:00 AM '>9:00 AM</option>
+    <option value='10:00 AM'>10:00 AM</option>
+    <option value='11:00 AM'>11:00 AM</option>
+    <option value='12:00 PM'>12:00 PM</option>
+    <option value='1:00 PM'>1:00 PM</option>
+
+ 
+  </select>
+  
+  <span class="mx-2">-</span>
+  
+  <select onChange={handleEnd} class="py-2 px-4 border border-gray-300 rounded">
+   
+    <option value='6:00 PM'>6:00 PM</option>
+    <option value='7:00 PM'>7:00 PM</option>
+    <option value='8:00 PM'>8:00 PM</option>
+    <option value='9:00 PM'>9:00 PM</option>
+    <option value='10:00 PM'>10:00 PM</option>
+
+  </select>
+</div>
       
 <h3 className="mb-4 font-semibold text-gray-900 dark:text-white">Fecilities</h3>
 <ul className="items-center w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg sm:flex dark:bg-gray-700 dark:border-gray-600 dark:text-white">

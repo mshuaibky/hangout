@@ -1,4 +1,5 @@
 import React,{useEffect,useState} from 'react'
+import { Link } from 'react-router-dom';
 import { getOrders,getpaginatedOrder } from '../../helpers/ownerHelper';
 
 function OwnerOrder() {
@@ -62,7 +63,7 @@ function OwnerOrder() {
 
   {
     data.orderDetails.map((items)=>{
-      
+   
         return(
         <tr>
           <td className=" whitespace-nowrap px-4 py-2 font-medium text-gray-900">
@@ -72,12 +73,12 @@ function OwnerOrder() {
           <td className="whitespace-nowrap px-4 py-2 text-gray-700">{data.tableNo}</td>
           <td className="whitespace-nowrap px-4 py-2 text-gray-700">{items.price}</td>
           <td className="whitespace-nowrap px-4 py-2">
-            <a
+            <Link to={`/owner/order-view-more/${data._id}`}
               href="#"
               className="inline-block rounded bg-indigo-600 px-4 py-2 text-xs font-medium text-white hover:bg-indigo-700"
             >
               View More
-            </a>
+            </Link>
           </td>
         </tr>
         )

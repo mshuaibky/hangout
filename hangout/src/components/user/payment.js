@@ -27,11 +27,14 @@ function Payment() {
   let datas=Object.assign({},userId,ownerId,id)
 
   function payment(datas){
+    console.log(datas,'payment datas');
    paymentDetails(datas).then((result)=>{
   if(result){
+    console.log(result,'namma result');
     navigate('/orders')
   }
    }).catch((error)=>{
+    console.log(error,'error');
     toast.error('somthing went wrong please book once more')
    })
    }

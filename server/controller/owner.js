@@ -4,7 +4,10 @@ const bcrypt = require('bcrypt');
 const cloudinary=require('../util/cloudinary')
 const Restaurants=require('../model/owner/restaurants')
 const Dishes=require('../model/owner/dishes'); 
-const Details=require('../model/owner/details-restaurant')
+const Details=require('../model/owner/details-restaurant');
+const Order = require('../model/user/order');
+const Banner=require('../model/owner/banner');
+const { log } = require('console');
 let ObjectId=require('mongoose').Types.ObjectId
 
 //owner register
@@ -94,7 +97,7 @@ exports.login=async(req,res)=>{
 //adding restaurant
 exports.resDetails=(async(req,res)=>{
     console.log(req.body,'req.body');
-    const {resName,resAddress,numberOfTables,phone,image,wifi,parking,Ac,ownerId,imageTwo}=req.body
+    const {resName,resAddress,numberOfTables,phone,image,wifi,parking,Ac,ownerId,imageTwo,startTime,endTime}=req.body
     
     try {
      const result=await cloudinary.uploader.upload(image,{
@@ -110,6 +113,8 @@ exports.resDetails=(async(req,res)=>{
             resAddress,
             numberOfTables,
             phone,
+            startTime,
+            endTime,
             wifi,
             parking,
             Ac,
@@ -386,5 +391,126 @@ exports.getAllTableDetails=async(req,res)=>{
         }
     } catch (error) {
         res.send(error)
+    }
+}
+//getting orders for owner
+exports.getOrderOwner=async(req,res)=>{
+    try {
+  
+        const {id}=req.params
+        let orders=await Order.find({ownerId:new ObjectId(id)})
+        if(orders){
+            res.status(200).send({data:orders})
+        }else{
+            res.status(500).send({msg:'something went wrong'})
+        }
+    } catch (error) {
+        res.send(error)
+    }
+}
+//getting paginated Order
+exports.paginatedOrder=async(req,res)=>{
+    console.log(req.query,'query');
+    try {
+        const items_perPage=2
+        const page=req.query.page||1
+        const skip=Math.floor((page-1)*items_perPage)
+        const query={}
+        const count=await Order.estimatedDocumentCount(query)
+        const result= await Order.find(query).limit(items_perPage).skip(skip)
+        const pageCount=Math.floor(count/items_perPage)
+       
+         res.status(200).send({count:count,pageCount:pageCount,data:result})
+    } catch (error) {
+        
+    }
+}
+//saving banner to database
+exports.bannerDetails=async(req,res)=>{
+    try {
+        console.log(req.body,'banner body');
+        const {ownerId,mainDiscription,subDiscription,image}=req.body
+        const result=await cloudinary.uploader.upload(image,{
+            upload_preset:'restaurant',
+        })
+        const Url=result.secure_url
+        const banner=new Banner({
+            mainDiscription,
+            subDiscription,
+            image:Url,
+            ownerId
+        })
+        banner.save().then((response)=>{
+            if(response){
+                res.status(200).send({data:'saved succesffully'})
+            }else{
+                res.status(500).send({msg:'something went wrong'})
+            }
+        })
+    } catch (error) {
+        res.send(error)
+    }
+}
+//getting banners
+exports.getBanner=async(req,res)=>{
+    try {
+        const {id}=req.params
+        const banner=await Banner.find({ownerId:new ObjectId(id)})
+        console.log(banner,'ownerBanner');
+        if(banner){
+            res.status(200).send({data:banner})
+        }else{
+            res.status(500).send({msg:'something went wrong'})
+        }
+    } catch (error) {
+       res.send(error) 
+    }
+}
+//delete banner
+exports.deleteBanner=async(req,res)=>{
+    try {
+       const {bannerId,ownerId}=req.params
+       let data=await Banner.findByIdAndDelete(bannerId)
+       console.log(data,'response');
+       if(data){
+        const banner=await Banner.find({ownerId:new ObjectId(ownerId)})
+        console.log(banner,'ownerBanner');
+        if(banner){
+            res.status(200).send({data:banner})
+        }else{
+            res.status(500).send({msg:'something went wrong'})
+        }
+       }
+    } catch (error) {
+        
+    }
+}
+//getting one order by id
+exports.getOneOrders=async(req,res)=>{
+    try {
+       const {id}=req.params
+       console.log(id,'id');
+       let order=await Order.findById(id)
+       console.log(order,'order');
+       if(order){
+        res.status(200).send({data:order})
+       }else{
+        res.status(500).send({msg:'something went wrong'})
+       }
+    } catch (error) {
+        res.send(error)
+    }
+}
+//delete Table
+exports.deleteTable=async(req,res)=>{
+    try {
+        const {id}=req.params
+        let data=await Table.findByIdAndDelete(id)
+     if(data){
+        let table=await Table.find({})
+        res.status(200).send({data:table})
+     }
+    } catch (error) {
+       res.send(error) 
     }
 }

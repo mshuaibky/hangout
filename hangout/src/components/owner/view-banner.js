@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { getBanners ,bannerDelete} from '../../helpers/ownerHelper'
 import Swal from 'sweetalert2'
-
 import { X } from 'lucide-react'
 
 function ViewBanner() {
