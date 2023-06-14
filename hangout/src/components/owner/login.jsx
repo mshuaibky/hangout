@@ -56,7 +56,10 @@ function Login() {
    
     
     if(data){
+     
+      sessionStorage.setItem('ownerToken',data?.data?.token)
       navigate('/owner-home')
+      
     }
   }).catch((error)=>{
  

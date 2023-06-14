@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { orderDetails, getUser, userpaginatedOrder } from '../../helpers/userHelpers'
+import { orderDetails, getUser, userpaginatedOrder,cancelOrder } from '../../helpers/userHelpers'
 
 function Orders() {
-   
+
 
 
     const user = localStorage.getItem('persist:1');
@@ -10,11 +10,12 @@ function Orders() {
     const userId = JSON.parse(parsedData.user).user.user;
 
     const [order, setOrder] = useState([])
+    console.log(order,'order..');
     const [users, setUsers] = useState([])
     const [page, setPage] = useState(1)
     const [pageCount, setPageCount] = useState(0)
-    console.log(order.updatedAt,'...');
-  
+    console.log(order.updatedAt, '...');
+
 
 
     useEffect(() => {
@@ -40,6 +41,7 @@ function Orders() {
         })
     }, [])
 
+
     const handlePrev = () => {
 
         setPage((p) => {
@@ -56,28 +58,35 @@ function Orders() {
         })
     }
     let sum = 0
+
+    const handleCancel=(id,userId)=>{
+       
+        cancelOrder(id,userId).then((data)=>{
+        setOrder(data?.data?.data) 
+    })
+    }
     return (
         <div>
             {
                 order?.map((items) => {
-                    const timestamp =items.updatedAt
+                    const timestamp = items.updatedAt
                     const date = new Date(timestamp);
-                    
+
                     // Extracting date components
                     const year = date.getFullYear();
                     const month = date.getMonth() + 1; // Months are zero-indexed, so we add 1
                     const day = date.getDate();
-                    
+
                     // Extracting time components
                     const hours = date.getHours();
                     const minutes = date.getMinutes();
                     const seconds = date.getSeconds();
-                    console.log(hours,'hours',minutes,'min',seconds,'sec');
+                    console.log(hours, 'hours', minutes, 'min', seconds, 'sec');
                     return (
                         <div className="py-14 px-4 md:px-6 2xl:px-20 2xl:container 2xl:mx-auto">
                             <div className="flex justify-start item-start space-y-2 flex-col ">
-                                <p className=" lg:text-xl font-semibold leading-7 lg:leading-9  text-gray-800">Date:{year?year:""}-{month?month:""}-{day?day:''}</p>
-                                <p className="text-base font-medium leading-6 text-gray-600">Time:{hours?hours:''}:{minutes?minutes:''}:{seconds?seconds:""}</p>
+                                <p className=" lg:text-xl font-semibold leading-7 lg:leading-9  text-gray-800">Date:{year ? year : ""}-{month ? month : ""}-{day ? day : ''}</p>
+                                <p className="text-base font-medium leading-6 text-gray-600">Time:{hours ? hours : ''}:{minutes ? minutes : ''}:{seconds ? seconds : ""}</p>
                             </div>
                             <div className="mt-10 flex flex-col xl:flex-row jusitfy-center items-stretch  w-full xl:space-x-8 space-y-4 md:space-y-6 xl:space-y-0">
                                 <div className="flex flex-col justify-start items-start w-full space-y-4 md:space-y-6 xl:space-y-8">
@@ -87,7 +96,7 @@ function Orders() {
                                         {
 
                                             items?.orderDetails?.map((data) => {
-                                                sum += data.price
+                                                sum += data.total
 
                                                 return (
                                                     <div className="mt-4 md:mt-6 flex  flex-col md:flex-row justify-start items-start md:items-center md:space-x-6 xl:space-x-8 w-full ">
@@ -112,18 +121,48 @@ function Orders() {
                                                                     <p className="text-sm leading-none text-gray-800">
                                                                         <span className="text-gray-300">price: </span> {data.price}
                                                                     </p>
+                                                                    {
+                                                                        items.isCancelled?
+                                                                    <p className="text-sm leading-none text-red-800">
+                                                                        <span className="text-gray-300">status: </span> Cancelled
+                                                                    </p>:
+                                                                     <p className="text-sm leading-none text-green-800">
+                                                                     <span className="text-gray-300">status: </span> Placed
+                                                                 </p>
+                                                                    }
 
                                                                 </div>
                                                             </div>
+                                                         
                                                             <div className="flex justify-between space-x-8 items-start w-full">
                                                                 <p className="text-base xl:text-lg leading-6">
-                                                                    <span className="text-red-500 ">price :{data.price}</span>
+                                                                    <span className="text-red-500 ">Total :{data.total}</span>
                                                                 </p>
                                                                 <p className="text-base xl:text-lg leading-6 text-gray-800">{data.count}</p>
                                                                 <p className="text-base xl:text-lg font-semibold leading-6 text-gray-800">{items.orderType}</p>
+                                                                <div>
+                                                            {
+                                                                items.isCancelled?
+                                                          <button 
+                                                          disabled
+                                                          
+                                                          className="bg-red-100 hover:bg-red-100 text-white font-bold py-2 px-4 rounded-full">
+                                                            Cancel
+                                                        </button>:
+                                                         <button 
+                                                        
+                                                         onClick={()=>{handleCancel(items._id,userId)}}
+                                                         className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full">
+                                                           Cancel
+                                                       </button>
+                                                            }       
+                                                          </div>
                                                             </div>
+                                                       
                                                         </div>
+                                                        
                                                     </div>
+                                                   
                                                 )
                                             })
                                         }
@@ -146,7 +185,7 @@ function Orders() {
 
                                             </div>
                                             <div className="flex justify-between items-center w-full">
-                                                <p className="text-base font-semibold leading-4 text-gray-800">Total</p>
+                                                <p className="text-base font-semibold leading-4 text-gray-800">Sub Total</p>
                                                 <p className="text-base font-semibold leading-4 text-gray-600">RS:{sum}</p>
                                             </div>
                                         </div>
@@ -274,15 +313,15 @@ function Orders() {
                             </div>
                         </div>
                     </div>
-                    <hr class="my-6 border-blueGray-300"/>
-                        <div class="flex flex-wrap items-center md:justify-between justify-center">
-                            <div class="w-full md:w-4/12 px-4 mx-auto text-center">
-                                <div class="text-sm text-blueGray-500 font-semibold py-1">
-                                    Copyright © <span id="get-current-year">2023</span>
-                                        <p  class="text-blueGray-500 hover:text-blueGray-800">Hangout</p>.
-                                </div>
+                    <hr class="my-6 border-blueGray-300" />
+                    <div class="flex flex-wrap items-center md:justify-between justify-center">
+                        <div class="w-full md:w-4/12 px-4 mx-auto text-center">
+                            <div class="text-sm text-blueGray-500 font-semibold py-1">
+                                Copyright © <span id="get-current-year">2023</span>
+                                <p class="text-blueGray-500 hover:text-blueGray-800">Hangout</p>.
                             </div>
                         </div>
+                    </div>
                 </div>
             </footer>
         </div>

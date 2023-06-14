@@ -17,6 +17,11 @@ const {register,
     paginatedOrderUser,
     getAlldish,
     bookedOrders,
+    addRating,
+    gettingReviews,
+    orderCancel,
+    userProfile,
+    logoutUser,
     verify} =require('../controller/user')
 
 router.post('/register',register)
@@ -27,6 +32,7 @@ router.post('/otp-number',recievingNumber);
 router.post('/otp-verify',verify)
 router.post('/checkout',checkoutData)
 router.post('/confirm-payment',confirmPayment)
+router.post('/rating-details',addRating)
 
 router.get('/get-all-restaurants',getAllRestaurants)
 router.get('/get-specific-dish/:id',getSpecificDish)
@@ -38,5 +44,8 @@ router.get('/get-paginated-data',paginatedData)
 router.get('/user-paginated-order',paginatedOrderUser)
 router.get('/get-all-dish',getAlldish)
 router.get('/get-booked-orders',bookedOrders)
-
+router.get('/get-reviews:id',gettingReviews)
+router.get('/cancel-order/:id/:userId',orderCancel)
+router.get('/profile:id',userProfile)
+router.get('/user-logout:id',logoutUser)
 module.exports=router

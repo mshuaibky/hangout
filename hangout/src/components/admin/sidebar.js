@@ -1,6 +1,19 @@
 import React from 'react'
-import {Link} from 'react-router-dom'
+import {Link,useNavigate} from 'react-router-dom'
+import {logoutAdmin} from '../../helpers/adminHelpers'
+
 function Sidebar() {
+  const id = sessionStorage.getItem('adminId');
+  const navigate=useNavigate()
+  const handleLogout=()=>{
+    logoutAdmin(id).then((data)=>{
+      if(data){
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('adminId');
+       navigate('/admin/login')
+      }
+    })
+  }
   return (
     <div>
       <div className="min-h-screen bg-gray-100">
@@ -12,7 +25,7 @@ function Sidebar() {
         </div>
         <ul className="mt-6 space-y-2 tracking-wide">
           <li className="min-w-max">
-            <a href="#" aria-label="dashboard" className="relative flex items-center space-x-4 bg-gradient-to-r from-sky-600 to-cyan-400 px-4 py-3 text-white">
+            <a href="/admin/dashboard" aria-label="dashboard" className="relative flex items-center space-x-4 bg-gradient-to-r from-sky-600 to-cyan-400 px-4 py-3 text-white">
               <svg className="-ml-1 h-6 w-6" viewBox="0 0 24 24" fill="none">
                 <path d="M6 8a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V8ZM6 15a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-1Z" className="fill-current text-cyan-400 dark:fill-slate-600"></path>
                 <path d="M13 8a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2V8Z" className="fill-current text-cyan-200 group-hover:text-cyan-300"></path>
@@ -57,7 +70,7 @@ function Sidebar() {
           </li>
           </Link>
           <li className="min-w-max">
-            <a href="#" className="group flex items-center space-x-4 rounded-md px-4 py-3 text-gray-600">
+            <a href="/admin/sales-report" className="group flex items-center space-x-4 rounded-md px-4 py-3 text-gray-600">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path className="fill-current text-gray-300 group-hover:text-cyan-300" d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" />
                 <path className="fill-current text-gray-600 group-hover:text-cyan-600" fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd" />
@@ -68,12 +81,25 @@ function Sidebar() {
         </ul>
       </div>
       <div className="w-max -mb-3">
-        <a href="#" className="group flex items-center space-x-4 rounded-md px-4 py-3 text-gray-600">
+        {
+          id?
+        <button 
+        onClick={handleLogout}
+         className="group flex items-center space-x-4 rounded-md px-4 py-3 text-gray-600">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 group-hover:fill-cyan-600" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
           </svg>
-          <span className="group-hover:text-gray-700">Settings</span>
-        </a>
+          <span className="group-hover:text-gray-700">Logout</span>
+        </button>:
+          <Link to={'/admin/login'}
+       
+           className="group flex items-center space-x-4 rounded-md px-4 py-3 text-gray-600">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 group-hover:fill-cyan-600" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
+            </svg>
+            <span className="group-hover:text-gray-700">login</span>
+          </Link>
+        }
       </div>
     </div>
   </div>

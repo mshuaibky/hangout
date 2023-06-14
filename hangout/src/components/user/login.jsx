@@ -65,12 +65,16 @@ function Login() {
 
       })
       login.then((data)=>{
-        console.log(data,'userData');
+        console.log(data?.data?.token,'userData');
+        sessionStorage.setItem('userToken',data?.data?.token) 
         if(data){
           const {_id}=data.data.user
           console.log(_id,'userId');
           dispatch(userLogin({user:_id}))
-           navigate('/')
+          setTimeout(() => {
+            
+            navigate('/')
+          }, 4000);
         }
       }).catch((error)=>{
        console.log(error.response.data.msg,'errrors');

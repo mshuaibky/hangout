@@ -21,8 +21,16 @@ const {signUp,
     getBanner,
     deleteBanner,
     getOneOrders,
-    deleteTable
+    deleteTable,
+    yearlyData,
+    monthlyData,
+    dailyData,
+    salesOrder,
+    logoutOwner
      }=require('../controller/owner')
+
+const {varifyToken}=require('../middlewares/owner-auth')
+
 //post
 router.post('/sign-up',signUp)
 router.post('/owner-login',login)
@@ -48,4 +56,10 @@ router.get('/get-banner:id',getBanner)
 router.get('/delete-banner/:bannerId/:ownerId',deleteBanner)
 router.get('/get-one-order:id',getOneOrders)
 router.get('/delete-table:id',deleteTable)
+router.get('/get-yearly:id',yearlyData)
+router.get('/get-monthly:id',monthlyData)
+router.get('/get-daily:id',dailyData)
+router.get('/get-order-sales/:ownerId/:userId',salesOrder)
+router.get('/logout:id',logoutOwner)
+
 module.exports=router

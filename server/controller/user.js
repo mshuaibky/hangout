@@ -2,6 +2,7 @@ const User = require('../model/user/user')
 const Dish=require('../model/owner/dishes')
 const Table=require('../model/owner/table')
 const Order=require('../model/user/order')
+const Rating=require('../model/user/rating')
 const moment=require('moment')
 let ObjectId=require('mongoose').Types.ObjectId
 const Restaurant=require('../model/owner/restaurants')
@@ -72,6 +73,9 @@ exports.login = async (req, res) => {
         if (user) {
             let validUser = await bcrypt.compare(password, user.password)
             if (validUser) {
+                const update = await User.updateOne({email:email},{
+                    $set:{user:true}
+                })
                 let token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: maxAge })
                 console.log(user._id, token, 'namma token and id');
                 res.cookie('jwt', token, {
@@ -224,11 +228,12 @@ exports.tableData=async(req,res)=>{
 
 //checkout
 exports.checkoutData=(req,res)=>{
-    console.log(req.body,'kkk');
+    console.log(req.body.allDishData[0].total,'kkk');
    try {
     const {button,selectedValue,userId,date,time}= req.body
     let order= new Order({
      orderDetails:req.body.allDishData,
+     total:req.body.allDishData[0].total,
      tableNo:button,
      orderType:selectedValue,
      userId,
@@ -303,7 +308,7 @@ exports.getUserDetails=async(req,res)=>{
         const {id}=req.params
         console.log(id,'id');
         let user= await User.findById(id)
-        console.log(user,'database user');
+       
         if(user){
             res.status(200).send({data:user})
         }else{
@@ -370,7 +375,6 @@ exports.bookedOrders=async(req,res)=>{
         const{id,date,time}=req.query
         const outputFormat = 'YYYY-MM-DDTHH:mm:ss.SSSZ';
         const convertDate=moment(date).format(outputFormat)
-         console.log(convertDate,'convertDate');
         let orders=await Order.find({userId:new ObjectId(id)})
        if(orders){
        let bookedOrders=await Order.find({
@@ -391,5 +395,111 @@ exports.bookedOrders=async(req,res)=>{
     } catch (error) {
        
        res.send(error)
+    }
+}
+//adding review
+
+exports.addRating=(req,res)=>{
+    try {
+        const {comment,rating,ownerId,name}=req.body
+         let data= new Rating({
+            comment,
+            rating,
+            ownerId,
+            name
+         })
+     data.save().then((result)=>{
+        console.log(result,'result');
+        console.log('saved successfully');
+     })
+    } catch (error) {
+        
+    }
+}
+
+//getting reviews
+exports.gettingReviews=async(req,res)=>{
+    try {
+const {id}=req.params
+console.log(id,'iddd');
+let reviews= await Rating.find({ownerId:new ObjectId(id)})   
+
+if(reviews){
+    res.status(200).send({data:reviews})
+}else{
+    res.status(500).send({msg:'something went wrong'})
+}
+    } catch (error) {
+        res.send(error)
+    }
+}
+//cancell order
+
+exports.orderCancel=async(req,res)=>{
+    try {
+      
+       
+        const {id,userId} = req.params
+        const data = await Order.findByIdAndUpdate(id,{
+            $set:{
+                isCancelled:true
+            }
+        })
+  if(data){
+    let orders=await Order.find({userId:new ObjectId(userId)})
+   if(orders){
+   
+      
+    const thatOrder=await Order.findById(id)
+    console.log(thatOrder.total,'prorder');
+   if(thatOrder){
+    const walletUpdate=await User.findOneAndUpdate({_id:userId},{
+        $inc:{
+         wallet:parseInt(thatOrder.total)
+        }
+    })
+    console.log(walletUpdate,'wallet');
+    res.status(200).send({data:orders})
+   }
+   
+}
+  }
+    } catch (error) {
+        console.log(error,'error..');
+    }
+}
+//user profile
+exports.userProfile=async(req,res)=>{
+    try {
+        const {id} = req.params
+       
+        const user = await User.findById(id)
+      if(user){
+        const order = await Order.find({userId:new ObjectId(id)})
+        if(order){
+            const totalNo=await Order.estimatedDocumentCount()
+            res.status(200).send({data:user,totalNo})
+        }
+      }else{
+        res.status(500).send({msg:'cannot get user'})
+      }
+    } catch (error) {
+       res.send(error)
+    }
+}
+//logout user
+exports.logoutUser=async(req,res)=>{
+    try {
+        const {id}=req.params
+      const user = await User.findByIdAndUpdate(id,{
+        user:false
+      })
+    if(user){
+        res.status(200).send({data:user})
+    }else{
+        res.status(500).send({msg:'cannot logout'})
+    }
+    } catch (error) {
+        res.send(error)
     }
 }

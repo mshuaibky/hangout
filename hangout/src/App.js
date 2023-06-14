@@ -31,6 +31,11 @@ import AddBanner from './components/owner/add-banner';
 import ViewAllDishPage from './pages/user/view-all-dish-page';
 import OrderViewPage from './pages/owner/order-view-more-page';
 import RestaurantPage from './pages/adimin/restaurant-page';
+import DashboardPage from './pages/owner/dashboard-page';
+import SalesPage from './pages/owner/sales-page';
+import DashAdminPage from './pages/adimin/dashboard-page'
+import AdminSalesPage from './pages/adimin/admin-sales-page';
+import ProfilePage from './pages/user/profile-page';
 
 function App() {
   return (
@@ -50,6 +55,8 @@ function App() {
      <Route path='/payment'  element={<PaymentPage/>}/>
      <Route path='/orders'  element={<OrderPage/>}/>
      <Route path='/view-all-dishes'  element={<ViewAllDishPage/>}/>
+     <Route path='/profile'  element={<ProfilePage/>}/>
+     
       
      {/* Owner route */}
 
@@ -68,6 +75,8 @@ function App() {
      <Route path='/owner/banner' element={<ViewBannerPage/>}/>
      <Route path='/owner/add-banner' element={<AddBanner/>}/>
      <Route path='/owner/order-view-more/:id' element={<OrderViewPage/>}/>
+     <Route path='/owner/dashboard' element={<DashboardPage/>}/>
+     <Route path='/owner/sales' element={<SalesPage/>}/>
 
 
       {/* admin Routes */}
@@ -76,6 +85,8 @@ function App() {
      <Route path='/admin/login' element={<AdminLogin/>}/>
      <Route path='/admin/user-list' element={<UserList/>}/>
      <Route path='/admin/restuarant' element={<RestaurantPage/>}/>
+     <Route path='/admin/dashboard' element={<DashAdminPage/>}/>
+     <Route path='/admin/sales-report' element={<AdminSalesPage/>}/>
 
     </Routes>
     </BrowserRouter>

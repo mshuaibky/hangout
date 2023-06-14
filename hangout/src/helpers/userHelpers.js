@@ -209,3 +209,68 @@ export async function getUser(id){
         })
     })
    }
+//adding review
+   export async function ratingData(data){
+    return new Promise((resolve,reject)=>{
+        axios.post('http://localhost:4000/rating-details',data).then((result)=>{
+            if(result){
+                resolve(result)
+            }
+        }).catch((error)=>{
+            reject(error)
+        })
+    })
+   }
+
+   //getting reviews
+
+   export async function getReview(id){
+    return new Promise((resolve,reject)=>{
+        axios.get(`http://localhost:4000/get-reviews${id}`).then((data)=>{
+            if(data){
+                resolve(data)
+            }
+        }).catch((error)=>{
+            reject(error)
+        })
+    })
+   }
+   //cancelOrder
+
+   export async function cancelOrder(id,userId){
+    console.log(id,userId,'axios..');
+   return new Promise((resolve,reject)=>{
+    axios.get(`http://localhost:4000/cancel-order/${id}/${userId}`).then((data)=>{
+        if(data){
+            resolve(data)
+        }
+    }).catch((error)=>{
+        reject(error)
+    })
+   })
+   }
+   //user Profile
+   export async function getuserDetails(id){
+    return new Promise((resolve,reject)=>{
+        axios.get(`http://localhost:4000/profile${id}`).then((data)=>{
+            if(data){
+                resolve(data)
+            }
+        }).catch((error)=>{
+            reject(error)
+        })
+    })
+   }
+   //logout user
+
+   export async function userLogout(id){
+    return new Promise((resolve,reject)=>{
+        axios.get(`http://localhost:4000/user-logout${id}`).then((data)=>{
+            if(data){
+                resolve(data)
+            }
+        }).catch((error)=>{
+            reject(error)
+        })
+    })
+   }

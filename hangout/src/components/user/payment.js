@@ -13,7 +13,6 @@ function Payment() {
   console.log(orders,'parsed order');
   const user = localStorage.getItem('persist:1');
   const parsedData = JSON.parse(user);
-
   const users = JSON.parse(parsedData.user).user.user;
 
 

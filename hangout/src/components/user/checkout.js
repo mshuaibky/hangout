@@ -169,6 +169,9 @@ console.log(filteredData,'filteredTables');
 
 
         {/* ending restaurant details */}
+    
+    {/* review component */}
+
       </main>
 
 
@@ -211,7 +214,7 @@ console.log(filteredData,'filteredTables');
 
             <DatePicker
               getSelectedDay={selectedDay}
-              endDate={40}
+              endDate={31}
               selectDate={currentDate}
               labelFormat={"MMMM"}
               color={"#16a34a"}
@@ -229,7 +232,7 @@ console.log(filteredData,'filteredTables');
                       value={items}
                       onClick={handleTime}
                       type="button"
-                      className="me-5 rounded-md bg-green-700  px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                      className="w-16 me-5 rounded-md bg-green-700  px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-400/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
                     >
                       {items}
                     </button>

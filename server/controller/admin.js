@@ -2,6 +2,7 @@ const Admin=require('../model/admin/admin')
 const User=require('../model/user/user')
 const Owner=require('../model/owner/owner')
 const Details=require('../model/owner/details-restaurant')
+const Order=require('../model/user/order')
 const Restuarant=require('../model/owner/restaurants')
 const bcrypt=require('bcrypt')
 const jwt=require('jsonwebtoken')
@@ -50,8 +51,15 @@ exports.AdminLogin=async(req,res)=>{
 
             const validateAdmin=await bcrypt.compare(password,admin[0].password)
             if(validateAdmin){
+                const update= await Admin.updateOne({email:email},
+                    {
+                        $set:{
+                            isAdmin:true
+                        }
+                    })
+                   
                const token=jwt.sign({id:admin[0]._id},process.env.JWT_KEY,{
-                expiresIn:"1hr" 
+                expiresIn:"24hr" 
                })
              res.cookie('jwt',token,{
                 withCredentials: true,
@@ -147,6 +155,150 @@ exports.acceptUser=async(req,res)=>{
         }else{
             res.status(500).send({msg:'something went wrong'})
         }
+    } catch (error) {
+        res.send(error)
+    }
+ }
+ //getting yearly data
+ exports.getAdminYearlyData=async(req,res)=>{
+    try {
+        const result=await Order.aggregate([
+            {
+                $group:{
+                    _id:{ $year : "$createdAt" },
+                    totalSales: { $sum: { $toDouble: "$total" } }
+                }
+               
+            },
+            {
+                $sort:{_id:1}
+            }
+        ])
+     if(result){
+        const yearlyReport =result.map(yearData=>yearData.totalSales)
+        res.status(200).send({data:yearlyReport})
+     }else{
+        res.status(500).send({msg:'cannot get data'})
+     }
+    } catch (error) {
+      res.status(500).send(error)
+    }
+ }
+ //getting monthly data
+ exports.getMonthlyData=async(req,res)=>{
+    try {
+        const result= await Order.aggregate([
+           
+            {
+                $group:{
+                    _id:{
+                        $month:"$date"
+                    },
+                    totalAmount:{
+                         $sum: { $toDouble: "$total" } 
+                    }
+                }
+            },
+            {
+                $project:{
+                    _id:0,
+                    month:"$_id",
+                    totalAmount:1
+                }
+            },
+            {
+                $group:{
+                    _id:null,
+                    data:{
+                        $push:{
+                            month:"$month",
+                            totalAmount:"$totalAmount"
+                        }
+                    }
+                }
+            },
+            {
+                $unwind: {
+                    path: "$data",
+                    includeArrayIndex: "index",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $group: {
+                    _id: "$data.month",
+                    totalAmount: {
+                        $max: "$data.totalAmount"
+                    }
+                }
+            },
+            {
+                $sort: {
+                    _id: 1
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    month: "$_id",
+                    totalAmount: {
+                        $ifNull: ["$totalAmount", 0]
+                    }
+                }
+            }
+        ])
+        const months = Array.from(Array(12), (_, i) => i + 1); // Generate an array of months (1 to 12)
+        const prices = months.map(month => {
+            const resultItem = result.find(item => item.month === month);
+            return resultItem ? resultItem.totalAmount : 0;
+        });
+      
+        res.status(200).send({data:prices})
+    } catch (error) {
+        
+    }
+ }
+ //getting daily data
+ exports.getAdminData=async(req,res)=>{
+    try {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const result=await Order.aggregate([
+            {
+                $match: {
+                    date: { $gte: today },
+                  
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    total:  {
+                        $sum: { $toDouble: "$total" } 
+                   }
+                },
+            },
+        ])
+        const dailyTotal = result.length > 0 ? result[0].total : 0;
+        res.status(201).send({data:dailyTotal})
+    } catch (error) {
+        res.status(500).send({msg:'cannot get data'})
+    }
+ }
+ //logout admin
+ exports.logotAdmin=async(req,res)=>{
+    try {
+       const {id}=req.params
+       const logout=await Admin.findByIdAndUpdate(id,{
+        $set:{
+            isAdmin:false
+        }
+    })
+   if(logout){
+    res.status(200).send({data:logout})
+   }else{
+    res.status(500).send({msg:'cannot logout'})
+   }
     } catch (error) {
         res.send(error)
     }

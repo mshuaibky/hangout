@@ -1,6 +1,22 @@
 import React from 'react'
-import {Link} from 'react-router-dom'
+import {Link,useNavigate} from 'react-router-dom'
+import {ownerLogout} from '../../helpers/ownerHelper'
+
+
 function Navbar() {
+  const ownerId = localStorage.getItem('ownerId');
+  const navigate=useNavigate()
+  const handleLogout=()=>{
+    
+    ownerLogout(ownerId).then((data)=>{
+     if(data){
+      sessionStorage.removeItem('ownerToken');
+      localStorage.removeItem('ownerId');
+    
+      navigate('/owner-login')
+     }
+    })
+  }
   return (
     <header aria-label="Site Header" className="shadow-md bg-white">
     <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
@@ -29,7 +45,7 @@ function Navbar() {
           <nav aria-label="Site Nav">
             <ul className="flex items-center gap-6 text-sm">
               <li>
-                <Link to={'/owner-home'}
+                <Link to={'/owner/dashboard'}
                   className="text-gray-500 transition hover:text-gray-500/75"
                   href=""
                 >
@@ -79,30 +95,48 @@ function Navbar() {
                 </Link>
               </li>
   
-  
+              <li>
+                <Link to={'/owner/sales'}
+                  className="text-gray-500 transition hover:text-gray-500/75"
+                 
+                >
+                  Sales Report
+                </Link>
+              </li>
              
             </ul>
           </nav>
         </div>
   
         <div className="flex items-center gap-4">
-          {/* <div className="sm:flex sm:gap-4">
-            <a
+     <div className="sm:flex sm:gap-4">
+      {
+        ownerId?
+            <button
+              onClick={handleLogout}
               className="rounded-md bg-teal-600 px-5 py-2.5 text-sm font-medium text-white shadow"
-              href="/"
+             
             >
-              Login
-            </a>
+              logout
+            </button>:
+             <Link 
+           to={'/owner-login'}
+             className="rounded-md bg-teal-600 px-5 py-2.5 text-sm font-medium text-white shadow"
+            
+           >
+             Login
+           </Link>
+      }
   
-            <div className="hidden sm:flex">
-              <a
+            {/* <div className="hidden sm:flex">
+              <button
                 className="rounded-md bg-gray-100 px-5 py-2.5 text-sm font-medium text-teal-600"
                 href="/"
               >
                 Register
-              </a>
-            </div>
-          </div> */}
+              </button>
+            </div> */}
+          </div>
   
           <div className="block md:hidden">
             <button

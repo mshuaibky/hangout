@@ -17,6 +17,10 @@ const ownerSchema=mongoose.Schema({
       type:Boolean,
       default:false
    },
+   isLoggedIn:{
+     type:Boolean,
+     default:false
+   },
     password:{
         type:String,
     },

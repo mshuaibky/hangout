@@ -30,6 +30,13 @@ phone:{
         type: Number,
         default: 0,
       },
+      wallet:{
+        type:Array
+      },
+     user: {
+         type:Boolean,
+         default:false  
+      },
       
     },{timeStamps:true}
 )

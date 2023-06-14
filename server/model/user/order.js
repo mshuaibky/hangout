@@ -11,10 +11,15 @@ const orderSchema=mongoose.Schema({
     type:String
    },
    userId:{
-    type:mongoose.Schema.Types.ObjectId
+    type:mongoose.Schema.Types.ObjectId,
+    ref:'User'
    },
    ownerId:{
       type:mongoose.Schema.Types.ObjectId
+   },
+   total:{
+    type:String,
+  
    },
    time:{
      type:String
@@ -27,6 +32,10 @@ const orderSchema=mongoose.Schema({
       default:false
    },
    isReserved:{
+      type:Boolean,
+      default:false
+   },
+   isCancelled:{
       type:Boolean,
       default:false
    }

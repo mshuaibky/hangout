@@ -1,5 +1,6 @@
 import React from 'react'
-
+import { useNavigate } from 'react-router-dom'
+import {userLogout} from '../../helpers/userHelpers'
 import {Menu,X} from 'lucide-react'
 
 const menuItems = [
@@ -16,17 +17,30 @@ const menuItems = [
     href:'/orders'
   },
   {
-    name: 'Contact',
-    href: '/',
+    name: 'Profile',
+    href: '/profile',
   },
 ]
 function Header() {
+  const navigate = useNavigate()
+  const user = localStorage.getItem('persist:1');
+  const parsedData = JSON.parse(user);
+  const userId = JSON.parse(parsedData.user).user.user;
+
   const [isMenuOpen, setIsMenuOpen] = React.useState(false)
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
   }
-
+  const handleLogout = (userId) => {
+    userLogout(userId).then((data)=>{
+     if(data){
+      localStorage.removeItem('persist:1');
+      navigate('/login')
+     
+     }
+    })
+  }
   return (
     <div className="relative w-full bg-white shadow-md ">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
@@ -63,12 +77,13 @@ function Header() {
         </div>
 
         <div className="hidden lg:block">
-          {/* <button
+          <button
+           onClick={()=>{handleLogout(userId)}}
             type="button"
             className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
           >
           Logout
-          </button> */}
+          </button>
         </div>
         <div className="lg:hidden">
           <Menu onClick={toggleMenu} className="h-6 w-6 cursor-pointer" />

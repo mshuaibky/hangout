@@ -71,7 +71,13 @@ function OrderView() {
                       <div className="flex-1">
                         <p className="text-sm font-bold text-gray-900">{data.name}</p>
                         <p className="mt-1.5 text-sm font-medium text-gray-500">catagory:{data.catagory}</p>
+
                         <p className="mt-1.5 text-sm font-medium text-gray-500">{order.orderType}</p>
+                       {
+                        order.isCancelled?
+                        <p className="mt-1.5 text-sm font-medium text-red-500">Cancelled</p>
+                            :""
+                       }
                       </div>
 
                       <p className="mt-4 text-sm font-medium text-gray-500">quantity:{data.count}</p>
