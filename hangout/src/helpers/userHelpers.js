@@ -2,11 +2,15 @@
 import axios from 'axios';
 axios.defaults.withCredentials = true
 
+const URL= 'http://localhost:4000'
+const userApi=  axios.create({
+    baseURL:URL
+})
 
 export async function registerUser(credentials){
     console.log(credentials,'namma credentials');
    return new Promise((resolve,reject)=>{
-    axios.post('http://localhost:4000/register',credentials).then((data)=>{
+    userApi.post('/register',credentials).then((data)=>{
         
         resolve(data)
     }).catch((error)=>{
@@ -18,7 +22,7 @@ export async function registerUser(credentials){
 
 export async function loginUser(credentials){
     return new Promise((resolve,reject)=>{
-        axios.post('http://localhost:4000/login',credentials).then((data)=>{
+        userApi.post('/login',credentials).then((data)=>{
             console.log(data,'userData');
             resolve(data)
         }).catch(error=>{
@@ -29,7 +33,7 @@ export async function loginUser(credentials){
 //otp login
 export async function number(data){
     return new Promise((resolve,reject)=>{
-        axios.post('http://localhost:4000/otp-number',data).then((value)=>{
+        userApi.post('/otp-number',data).then((value)=>{
             console.log(value,'userValue');
             resolve(value)
         }).catch((error)=>{
@@ -41,7 +45,7 @@ export async function number(data){
 //verify Otp
 export async function verify(data){
     return new Promise((resolve,reject)=>{
-        axios.post('http://localhost:4000/otp-verify',data).then((value)=>{
+        userApi.post('/otp-verify',data).then((value)=>{
             console.log(value);
             resolve(value)
         }).catch((error)=>{
@@ -53,7 +57,7 @@ export async function verify(data){
 export async function googleLogin(data){
     console.log(data,'data');
   return new Promise((resolve,reject)=>{
-    axios.post('http://localhost:4000/googleregister',data).then((data)=>{
+    userApi.post('/googleregister',data).then((data)=>{
         resolve(data)
     }).catch((error)=>{
         reject(error)
@@ -65,7 +69,7 @@ export async function googleLogin(data){
 
 export async function loginGoogle(data){
     return new Promise((resolve,reject)=>{
-        axios.post('http://localhost:4000/login-google',data).then((data)=>{
+        userApi.post('/login-google',data).then((data)=>{
             resolve(data)
         }).catch((error)=>{
            console.log(error.response);
@@ -76,7 +80,7 @@ export async function loginGoogle(data){
 //get all restaurants
 export async function getAllRestaurnts(){
     return new Promise((resolve,reject)=>{
-        axios.get('http://localhost:4000/get-all-restaurants').then((data)=>{
+        userApi.get('/get-all-restaurants').then((data)=>{
             resolve(data)
         }).catch((error)=>{
             reject(error)
@@ -87,7 +91,7 @@ export async function getAllRestaurnts(){
 
 export async function dishDetails(id){
     return new Promise((resolve,reject)=>{
-        axios.get(`http://localhost:4000/get-specific-dish/${id}`).then((data)=>{
+        userApi.get(`/get-specific-dish/${id}`).then((data)=>{
             resolve(data)
         }).catch((error)=>{
             reject(error)
@@ -97,7 +101,7 @@ export async function dishDetails(id){
 
 export async function getTableData(id){
     return new Promise((resolve,reject)=>{
-        axios.get(`http://localhost:4000/table-data${id}`).then((data)=>{
+        userApi.get(`/table-data${id}`).then((data)=>{
             resolve(data)
         }).catch((error)=>{
             reject(error)
@@ -107,7 +111,7 @@ export async function getTableData(id){
 //checkout
 export async function checkoutData(data){
     return new Promise((resolve,reject)=>{
-        axios.post('http://localhost:4000/checkout',data).then((data)=>{
+        userApi.post('/checkout',data).then((data)=>{
             resolve(data)
         }).catch((error)=>{
             reject(error)
@@ -119,7 +123,7 @@ export async function checkoutData(data){
 
 export async function getOrders(id){
     return new Promise((resolve,reject)=>{
-        axios.get(`http://localhost:4000/get-orders${id}`).then((data)=>{
+        userApi.get(`/get-orders${id}`).then((data)=>{
             resolve(data)
         }).catch((error)=>{
             reject(error)
@@ -130,7 +134,7 @@ export async function getOrders(id){
 export async function paymentDetails(details){
     console.log(details,'api call');
     return new Promise((resolve,reject)=>{
-        axios.post('http://localhost:4000/confirm-payment',details).then((data)=>{
+        userApi.post('/confirm-payment',details).then((data)=>{
     console.log(data,'api call');
          
             resolve(data)
@@ -142,7 +146,7 @@ export async function paymentDetails(details){
 //getting orders order by user
 export async function orderDetails(id){
  return new Promise((resolve,reject)=>{
-    axios.get(`http://localhost:4000/user-order${id}`).then((data)=>{
+    userApi.get(`/user-order${id}`).then((data)=>{
         if(data){
             resolve(data)
         }
@@ -152,7 +156,7 @@ export async function orderDetails(id){
 //getting the perticuler user
 export async function getUser(id){
     return new Promise((resolve,reject)=>{
-       axios.get(`http://localhost:4000/get-user${id}`).then((data)=>{
+       userApi.get(`/get-user${id}`).then((data)=>{
            if(data){
                resolve(data)
            }
@@ -162,7 +166,7 @@ export async function getUser(id){
    //paginated restaurants
    export async function getPaginatedRes(page){
    return new Promise((resolve,reject)=>{
-    axios.get(`http://localhost:4000/get-paginated-data?page=${page}`).then((data)=>{
+    userApi.get(`/get-paginated-data?page=${page}`).then((data)=>{
         if(data){
             resolve(data)
         }
@@ -174,7 +178,7 @@ export async function getUser(id){
    //pagintated order
    export async function userpaginatedOrder(page,id){
     return new Promise((resolve,reject)=>{
-        axios.get(`http://localhost:4000/user-paginated-order?page=${page}&&${id}`).then((data)=>{
+        userApi.get(`/user-paginated-order?page=${page}&&${id}`).then((data)=>{
             if(data){
                 resolve(data)
             }
@@ -187,7 +191,7 @@ export async function getUser(id){
    //getiing all dishes
    export async function getallDishes(){
     return new Promise((resolve,reject)=>{
-        axios.get('http://localhost:4000/get-all-dish').then((data)=>{
+        userApi.get('/get-all-dish').then((data)=>{
             if(data){
                 resolve(data)
             }
@@ -199,7 +203,7 @@ export async function getUser(id){
    //getting booked orders
    export async function bookedOrders(id,date,time){
     return new Promise((resolve,reject)=>{
-        axios.get(`http://localhost:4000/get-booked-orders?id=${id}&&date=${date}&&time=${time}`).then((data)=>{
+        userApi.get(`/get-booked-orders?id=${id}&&date=${date}&&time=${time}`).then((data)=>{
             if(data){
                 resolve(data)
             }
@@ -212,7 +216,7 @@ export async function getUser(id){
 //adding review
    export async function ratingData(data){
     return new Promise((resolve,reject)=>{
-        axios.post('http://localhost:4000/rating-details',data).then((result)=>{
+        userApi.post('/rating-details',data).then((result)=>{
             if(result){
                 resolve(result)
             }
@@ -226,7 +230,7 @@ export async function getUser(id){
 
    export async function getReview(id){
     return new Promise((resolve,reject)=>{
-        axios.get(`http://localhost:4000/get-reviews${id}`).then((data)=>{
+        userApi.get(`/get-reviews${id}`).then((data)=>{
             if(data){
                 resolve(data)
             }
@@ -238,9 +242,9 @@ export async function getUser(id){
    //cancelOrder
 
    export async function cancelOrder(id,userId){
-    console.log(id,userId,'axios..');
+    console.log(id,userId,'userApi..');
    return new Promise((resolve,reject)=>{
-    axios.get(`http://localhost:4000/cancel-order/${id}/${userId}`).then((data)=>{
+    userApi.get(`/cancel-order/${id}/${userId}`).then((data)=>{
         if(data){
             resolve(data)
         }
@@ -252,7 +256,7 @@ export async function getUser(id){
    //user Profile
    export async function getuserDetails(id){
     return new Promise((resolve,reject)=>{
-        axios.get(`http://localhost:4000/profile${id}`).then((data)=>{
+        userApi.get(`/profile${id}`).then((data)=>{
             if(data){
                 resolve(data)
             }
@@ -260,12 +264,12 @@ export async function getUser(id){
             reject(error)
         })
     })
-   }
+   } 
    //logout user
 
    export async function userLogout(id){
     return new Promise((resolve,reject)=>{
-        axios.get(`http://localhost:4000/user-logout${id}`).then((data)=>{
+        userApi.get(`/user-logout${id}`).then((data)=>{
             if(data){
                 resolve(data)
             }
@@ -274,3 +278,4 @@ export async function getUser(id){
         })
     })
    }
+  

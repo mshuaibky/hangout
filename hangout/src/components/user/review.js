@@ -3,20 +3,25 @@ import { getReview } from '../../helpers/userHelpers'
 import { FaStar } from 'react-icons/fa';
 
 const ProductReview1 = ({ input }) => {
+    const owId = sessionStorage.getItem('ID');
+    const parsedData = JSON.parse(owId);
+    const id = parsedData.ownerId
+  
+    console.log(id,'......');
     const ownerId = localStorage.getItem('ownerId');
     console.log(ownerId, 'id owner');
     const [review, setReview] = useState([])
     console.log(review, '////////');
 
     useEffect(() => {
-        async function getData(ownerId) {
+        async function getData(id) {
           
-            let data = await getReview(ownerId)
+            let data = await getReview(id)
             console.log(data, 'data');
             setReview(data?.data?.data)
 
         }
-        getData(ownerId);
+        getData(id);
     }, [input])
     return (
 

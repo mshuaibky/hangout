@@ -1,23 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import { getAllRestaurnts,getPaginatedRes } from '../../helpers/userHelpers'
-
+import { RiStarSFill } from 'react-icons/ri';
 
 
 import { Link } from 'react-router-dom'
 
 function ListRestaurant() {
-
+  
+   
     const [data, setData] = useState([])
     const [currentPage, setCurrentPage] = useState(1)
     const recordsPerPage = 6
     const lastIndex = currentPage * recordsPerPage
     const firstIndex = lastIndex - recordsPerPage
     const records = data.slice(firstIndex, lastIndex)
-    console.log(records,'records');
+
     const nPage = Math.ceil(data.length / recordsPerPage)
-    console.log(nPage,'page');
+   
     const numbers=[...Array(nPage+1).keys()].slice(1)
-    console.log(numbers,'numbers');
+   
 //    const [page,setPage]=useState(1)
 //    const [pageCount,setPageCount]=useState(0)
    const [search,setSearch]=useState('')
@@ -34,7 +35,7 @@ function ListRestaurant() {
     
     }, [])
   
-   
+ 
 
     const prePage=()=>{
         if(currentPage!==1){
@@ -73,6 +74,12 @@ function ListRestaurant() {
                             return search.toLowerCase() === ''? data:data.resName.toLowerCase()
                             .includes(search)
                         }).map((items) => {
+                            console.log(items,'res itemsss...')
+                            var ratings = items.rating // Replace '...' with your array of ratings
+
+var averageRating = items?.rating.reduce((a, b) => a + b, 0) / items?.rating.length;
+var scaledRating = (averageRating / 10) * 5; 
+
 
                             return (
 
@@ -84,6 +91,7 @@ function ListRestaurant() {
 
                                     </div>
                                     <h3 className="m-2 text-xl font-bold text-indigo-600">{items.resName} </h3>
+                                 
                                     <h5 className="m-2 text-gray-800 text-lg font-bold cursor-pointer">{items.resAddress}</h5>
                                     <div className="my-4">
                                         <div className="flex space-x-1 items-center">
@@ -105,6 +113,18 @@ function ListRestaurant() {
                                             <b>{items.phone}</b>
 
                                         </div>
+                                            {
+                                                items.rating.length>0?
+                                        <div className="flex space-x-3 items-center">
+                                                <RiStarSFill className='' />
+                                                       
+                                                  
+        
+                                                    <b>{scaledRating}</b>
+
+                                        </div>:""
+                                            }
+                                         
 
                                         <Link to={`/user/dish-listing/${items?.ownerId}`} ><button className="mt-4 text-xl w-full text-white bg-indigo-600 py-2 rounded-xl shadow-lg">Book Now</button></Link>
 

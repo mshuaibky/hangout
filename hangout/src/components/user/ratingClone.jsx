@@ -7,6 +7,10 @@ import ProductReview1 from './review';
 
 
 function RatingClone() {
+    const owId = sessionStorage.getItem('ID');
+    const edData = JSON.parse(owId);
+    const id = edData.ownerId
+  
     const ownerId = localStorage.getItem('ownerId');
     const user = localStorage.getItem('persist:1');
     const parsedData = JSON.parse(user);
@@ -39,10 +43,10 @@ useEffect(()=>{
         validateOnBlur: false,
         validateOnChange: false,
         onSubmit: async values => {
-            const id = { ownerId: ownerId }
+            const owid = { ownerId: id }
             const rat={rating:rating}
             const userName={name:name}
-            const data = Object.assign({}, values, id, rat,userName)
+            const data = Object.assign({}, values, owid, rat,userName)
             console.log(data,'namma data');
             let details = ratingData(data)
             

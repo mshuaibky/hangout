@@ -45,7 +45,10 @@ ownerId:{
     },
     phone:{
         type:Number,
-    }
+    },
+    rating:{
+      type:Array  
+    },
 })
 
 

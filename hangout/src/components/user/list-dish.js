@@ -38,7 +38,7 @@ function ListDish() {
             count: item.count + 1,
             total: (item.count + 1) * item.price, // Calculate the new total
           };
-          sessionStorage.setItem(itemId, JSON.stringify(updatedItem));
+          sessionStorage.setItem('ID', JSON.stringify(updatedItem));
           return updatedItem;
         }
         return item;

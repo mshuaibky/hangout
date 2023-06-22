@@ -22,6 +22,7 @@ const {register,
     orderCancel,
     userProfile,
     logoutUser,
+
     verify} =require('../controller/user')
 
 router.post('/register',register)
@@ -48,4 +49,5 @@ router.get('/get-reviews:id',gettingReviews)
 router.get('/cancel-order/:id/:userId',orderCancel)
 router.get('/profile:id',userProfile)
 router.get('/user-logout:id',logoutUser)
+
 module.exports=router
