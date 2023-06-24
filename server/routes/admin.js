@@ -8,7 +8,8 @@ const {AdminSignUp,AdminLogin,allUsers,
     getAdminYearlyData,
     getMonthlyData,
     getAdminData,
-    logotAdmin
+    logotAdmin,
+    adminSalesReport
     
 }=require('../controller/admin')
 
@@ -27,4 +28,5 @@ router.get('/admin-yearly-data',getAdminYearlyData)
 router.get('/admin-monthly-data',getMonthlyData)
 router.get('/admin-daily-data',getAdminData)
 router.get('/logout-admin:id',logotAdmin)
+router.get('/get-admin-sales:id',adminSalesReport)
 module.exports= router

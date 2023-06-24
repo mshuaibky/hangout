@@ -303,3 +303,22 @@ exports.acceptUser=async(req,res)=>{
         res.send(error)
     }
  }
+ //salesReport
+ exports.adminSalesReport=async(req,res)=>{
+    try {
+       
+        const result = await Order.find({}).populate({
+            path:'userId',
+            select:['name','email']
+        })
+        console.log(result,'resultLLL');
+        if(result){
+            res.status(200).send({data:result})
+           }else{
+            res.status(500).send({msg:'something went wrong'})
+           }
+    } catch (error) {
+       res.status(500).send(error)
+        
+    }
+ }
